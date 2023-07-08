@@ -1,0 +1,45 @@
+name: genesis_shell
+description: The next-generation fully featured desktop environment ExpidusOS.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.5 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  libtokyo:
+    git:
+      url: https://github.com/ExpidusOS/libtokyo.git
+      ref: 3e1946e1f09d778a44d710ab634957d5281e8e86
+      path: packages/libtokyo
+  libtokyo_flutter:
+    git:
+      url: https://github.com/ExpidusOS/libtokyo.git
+      ref: 3e1946e1f09d778a44d710ab634957d5281e8e86
+      path: packages/libtokyo_flutter
+  gokai:
+    git:
+      url: https://github.com/ExpidusOS/gokai.git
+      ref: 52c73acdaf95c9099a5c593e87b6eb341c1bbe8d
+      path: packages/gokai
+  intl: ^0.18.0
+
+dependency_overrides:
+  libtokyo:
+    git:
+      url: https://github.com/ExpidusOS/libtokyo.git
+      ref: 3e1946e1f09d778a44d710ab634957d5281e8e86
+      path: packages/libtokyo
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/wallpaper/desktop/
+    - assets/wallpaper/mobile/

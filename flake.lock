@@ -3,11 +3,27 @@
     "disko": {
       "flake": false,
       "locked": {
-        "lastModified": 1672841174,
-        "narHash": "sha256-E4t0BnQdbvfbpd9uJnQen5Gsu3LreHoZff7c9Z0wr+Y=",
+        "lastModified": 1678067051,
+        "narHash": "sha256-0QN2lO6dp4OlEysqufuXEgW1QywANKCuF+6EsNXcZ7o=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "dd025155fb0f5d36afd6719e358e7cf99a47644e",
+        "rev": "cf705ee16161b29b0e18983ecd8df3cb50f66142",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
+    "disko_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1678067051,
+        "narHash": "sha256-0QN2lO6dp4OlEysqufuXEgW1QywANKCuF+6EsNXcZ7o=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "cf705ee16161b29b0e18983ecd8df3cb50f66142",
         "type": "github"
       },
       "original": {
@@ -19,17 +35,19 @@
     "expidus-sdk": {
       "inputs": {
         "disko": "disko",
+        "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "mobile-nixos": "mobile-nixos",
-        "nixpkgs": "nixpkgs",
-        "utils": "utils"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1673120903,
-        "narHash": "sha256-PGnRKAQ1EHsL7qSwA85aPFfsEdAt8CsDnciEwPFM3mQ=",
+        "lastModified": 1680300814,
+        "narHash": "sha256-I8W/iShUJN69MOYp3hZnvnLZNDxs7I2cBfhQtWAnjd4=",
         "owner": "ExpidusOS",
         "repo": "sdk",
-        "rev": "ab04e8fbc2fd5d84510e19f610b1e1d8a1fa2416",
+        "rev": "ec36aad9c12d9ecadf611ee7fe1fe3114003f6ad",
         "type": "github"
       },
       "original": {
@@ -38,47 +56,88 @@
         "type": "github"
       }
     },
-    "gmobile": {
-      "flake": false,
+    "expidus-sdk_2": {
+      "inputs": {
+        "disko": "disko_2",
+        "flake-utils": "flake-utils_2",
+        "home-manager": "home-manager_2",
+        "mobile-nixos": "mobile-nixos_2",
+        "nixpkgs": [
+          "gokai",
+          "nixpkgs"
+        ]
+      },
       "locked": {
-        "lastModified": 1670238874,
-        "narHash": "sha256-MrSQkJ9/dQpEEDSfL4nZutHczkNOj5XH1myTB84EE9c=",
-        "ref": "main",
-        "rev": "1039e7808195d4de367ce2718481641ca8af2427",
-        "revCount": 19,
-        "type": "git",
-        "url": "https://gitlab.gnome.org/guidog/gmobile.git"
+        "lastModified": 1680300814,
+        "narHash": "sha256-I8W/iShUJN69MOYp3hZnvnLZNDxs7I2cBfhQtWAnjd4=",
+        "owner": "ExpidusOS",
+        "repo": "sdk",
+        "rev": "ec36aad9c12d9ecadf611ee7fe1fe3114003f6ad",
+        "type": "github"
       },
       "original": {
-        "ref": "main",
-        "type": "git",
-        "url": "https://gitlab.gnome.org/guidog/gmobile.git"
+        "owner": "ExpidusOS",
+        "repo": "sdk",
+        "type": "github"
       }
     },
-    "gvc": {
-      "flake": false,
+    "flake-utils": {
       "locked": {
-        "lastModified": 1642013245,
-        "narHash": "sha256-FosJwgTCp6/EI6WVbJhPisokRBA6oT0eo7d+Ya7fFX8=",
-        "ref": "refs/heads/master",
-        "rev": "8e7a5a4c3e51007ce6579292642517e3d3eb9c50",
-        "revCount": 73,
-        "type": "git",
-        "url": "https://gitlab.gnome.org/GNOME/libgnome-volume-control.git"
+        "lastModified": 1676283394,
+        "narHash": "sha256-XX2f9c3iySLCw54rJ/CZs+ZK6IQy7GXNY4nSOyu2QG4=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3db36a8b464d0c4532ba1c7dda728f4576d6d073",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://gitlab.gnome.org/GNOME/libgnome-volume-control.git"
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1676283394,
+        "narHash": "sha256-XX2f9c3iySLCw54rJ/CZs+ZK6IQy7GXNY4nSOyu2QG4=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "3db36a8b464d0c4532ba1c7dda728f4576d6d073",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "gokai": {
+      "inputs": {
+        "expidus-sdk": "expidus-sdk_2",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1688783154,
+        "narHash": "sha256-UuRXqFdHZNHYJM8ZAlGn8WqL4ZKQKOro6QfpcNSFjhI=",
+        "owner": "ExpidusOS",
+        "repo": "gokai",
+        "rev": "52c73acdaf95c9099a5c593e87b6eb341c1bbe8d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ExpidusOS",
+        "repo": "gokai",
+        "type": "github"
       }
     },
     "home-manager": {
       "flake": false,
       "locked": {
-        "lastModified": 1672244468,
-        "narHash": "sha256-xaZb8AZqoXRCSqPusCk4ouf+fUNP8UJdafmMTF1Ltlw=",
+        "lastModified": 1677757546,
+        "narHash": "sha256-tA1ukoluctzLVyWRaKtD4KlTwgXbUsGB5vcyni1OJ9I=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "89a8ba0b5b43b3350ff2e3ef37b66736b2ef8706",
+        "rev": "86bb69b0b1e10d99a30c4352f230f03106dd0f8a",
         "type": "github"
       },
       "original": {
@@ -88,31 +147,47 @@
         "type": "github"
       }
     },
-    "libcall-ui": {
+    "home-manager_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1672340364,
-        "narHash": "sha256-hDyU/v5WmzvMRjGFZze8VIX51Np47W/vc0YG2Mj8Ed8=",
-        "ref": "main",
-        "rev": "0a5bf80db0aa2dc7d3354c769852cdc017b95695",
-        "revCount": 309,
-        "type": "git",
-        "url": "https://gitlab.gnome.org/World/Phosh/libcall-ui.git"
+        "lastModified": 1677757546,
+        "narHash": "sha256-tA1ukoluctzLVyWRaKtD4KlTwgXbUsGB5vcyni1OJ9I=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "86bb69b0b1e10d99a30c4352f230f03106dd0f8a",
+        "type": "github"
       },
       "original": {
-        "ref": "main",
-        "type": "git",
-        "url": "https://gitlab.gnome.org/World/Phosh/libcall-ui.git"
+        "owner": "nix-community",
+        "ref": "release-22.11",
+        "repo": "home-manager",
+        "type": "github"
       }
     },
     "mobile-nixos": {
       "flake": false,
       "locked": {
-        "lastModified": 1670131242,
-        "narHash": "sha256-T/o1/3gffr010fsqgNshs1NJJjsnUYvQnUZgm6hilsY=",
+        "lastModified": 1677879564,
+        "narHash": "sha256-luJTRYY1zEoN5fSGwbZxq66IE1kdrqOq0/iBWzw7gOI=",
         "owner": "NixOS",
         "repo": "mobile-nixos",
-        "rev": "5ee45cc1f8e43f4af14ee17ccef9156b0db8cd77",
+        "rev": "9a0c317a027d1c085c641fe6df1f51b71880b720",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "mobile-nixos",
+        "type": "github"
+      }
+    },
+    "mobile-nixos_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1677879564,
+        "narHash": "sha256-luJTRYY1zEoN5fSGwbZxq66IE1kdrqOq0/iBWzw7gOI=",
+        "owner": "NixOS",
+        "repo": "mobile-nixos",
+        "rev": "9a0c317a027d1c085c641fe6df1f51b71880b720",
         "type": "github"
       },
       "original": {
@@ -122,18 +197,31 @@
       }
     },
     "nixpkgs": {
-      "flake": false,
       "locked": {
-        "lastModified": 1672968032,
-        "narHash": "sha256-26Jns3GmHem44a06UN5Rj/KOD9qNJThyQrom02Ijur8=",
-        "owner": "NixOS",
+        "lastModified": 1687290918,
+        "narHash": "sha256-e5nwdePQUUridA+i15zizzeRB7WQ06UtMzwd5yzCMoI=",
+        "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "2dea8991d89b9f1e78d874945f78ca15f6954289",
+        "rev": "2346a1d37a2b22c4831dc76a28f3361a39f76d66",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-22.11",
+        "owner": "ExpidusOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1687290918,
+        "narHash": "sha256-e5nwdePQUUridA+i15zizzeRB7WQ06UtMzwd5yzCMoI=",
+        "owner": "ExpidusOS",
+        "repo": "nixpkgs",
+        "rev": "2346a1d37a2b22c4831dc76a28f3361a39f76d66",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ExpidusOS",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -141,24 +229,8 @@
     "root": {
       "inputs": {
         "expidus-sdk": "expidus-sdk",
-        "gmobile": "gmobile",
-        "gvc": "gvc",
-        "libcall-ui": "libcall-ui"
-      }
-    },
-    "utils": {
-      "locked": {
-        "lastModified": 1667395993,
-        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
+        "gokai": "gokai",
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },
