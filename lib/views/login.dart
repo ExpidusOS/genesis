@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:genesis_shell/widgets.dart';
+import 'package:gokai/user/account.dart';
+import 'package:gokai/gokai.dart';
+import 'package:gokai/services.dart';
 
 class GenesisShellLogIn extends StatefulWidget {
   const GenesisShellLogIn({super.key});
@@ -9,9 +13,43 @@ class GenesisShellLogIn extends StatefulWidget {
 }
 
 class _GenesisShellLogInState extends State<GenesisShellLogIn> {
+  Key _accounts_key = UniqueKey();
+
+  GokaiContext? _gokai_context;
+
+  void _onAccountManagerChange() {
+    final accountManager = _gokai_context!.services['AccountManager'] as GokaiAccountManager;
+    accountManager.getAll().then((accounts) => setState(() {
+    }));
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return Stack(
+  void initState() {
+    super.initState();
+
+    GokaiContext().init().then((ctx) {
+      final accountManager = ctx.services['AccountManager'] as GokaiAccountManager;
+
+      setState(() {
+        _gokai_context = ctx;
+        accountManager.onChange.add(_onAccountManagerChange);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    if (_gokai_context != null) {
+      final accountManager = _gokai_context!.services['AccountManager'] as GokaiAccountManager;
+      accountManager.onChange.remove(_onAccountManagerChange);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+    Stack(
       children: [
         Container(
           decoration: const BoxDecoration(
@@ -44,6 +82,59 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                           'Log In',
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
+                        _gokai_context == null
+                          ? const CircularProgressIndicator()
+                          : FutureBuilder(
+                              key: _accounts_key,
+                              future: (_gokai_context!.services['AccountManager'] as GokaiAccountManager).getAll(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.all(8.0),
+                                    children: snapshot.data!.map((account) =>
+                                      Column(
+                                        children: [
+                                          IconButton(
+                                            icon: account.picture == null
+                                              ? const Icon(Icons.account_circle)
+                                              : Image.file(
+                                                  File(account.picture!),
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return const Icon(Icons.account_circle);
+                                                  }
+                                                ),
+                                            onPressed: () {}
+                                          ),
+                                          Text(account.displayName),
+                                        ],
+                                      )
+                                    ).toList(),
+                                  );
+                                }
+
+                                if (snapshot.hasError) {
+                                  return Container(
+                                    height: 80,
+                                    child: Card(
+                                      color: Theme.of(context).colorScheme.errorContainer,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: Text(
+                                            'Failed to get user accounts: ${snapshot.error!.toString()}',
+                                            style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                                              color: Theme.of(context).colorScheme.error,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return const CircularProgressIndicator();
+                              },
+                            ),
                       ],
                     ),
                   ),
@@ -54,5 +145,4 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
         )
       ],
     );
-  }
 }
