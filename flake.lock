@@ -114,14 +114,16 @@
     "gokai": {
       "inputs": {
         "expidus-sdk": "expidus-sdk_2",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1688783154,
-        "narHash": "sha256-UuRXqFdHZNHYJM8ZAlGn8WqL4ZKQKOro6QfpcNSFjhI=",
+        "lastModified": 1688915065,
+        "narHash": "sha256-hIj+E9aLwiZkVxeDEMagKDFgHyc20nhSc/ferr5AD3o=",
         "owner": "ExpidusOS",
         "repo": "gokai",
-        "rev": "52c73acdaf95c9099a5c593e87b6eb341c1bbe8d",
+        "rev": "a68193036896480e86e5e819df519a43a96f5cef",
         "type": "github"
       },
       "original": {
@@ -198,26 +200,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1687290918,
-        "narHash": "sha256-e5nwdePQUUridA+i15zizzeRB7WQ06UtMzwd5yzCMoI=",
+        "lastModified": 1688830399,
+        "narHash": "sha256-/Uuq7N5WVx80ADqDDXMx95CJ4dQ1K99wqs85kOMA8qg=",
         "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "2346a1d37a2b22c4831dc76a28f3361a39f76d66",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ExpidusOS",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1687290918,
-        "narHash": "sha256-e5nwdePQUUridA+i15zizzeRB7WQ06UtMzwd5yzCMoI=",
-        "owner": "ExpidusOS",
-        "repo": "nixpkgs",
-        "rev": "2346a1d37a2b22c4831dc76a28f3361a39f76d66",
+        "rev": "95d6f3c6d6a160525f5346060313e6784b492f70",
         "type": "github"
       },
       "original": {
@@ -230,7 +217,7 @@
       "inputs": {
         "expidus-sdk": "expidus-sdk",
         "gokai": "gokai",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs"
       }
     }
   },

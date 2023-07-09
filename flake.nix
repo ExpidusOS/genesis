@@ -16,7 +16,10 @@
 
   inputs.nixpkgs.url = github:ExpidusOS/nixpkgs;
 
-  inputs.gokai.url = github:ExpidusOS/gokai;
+  inputs.gokai = {
+    url = github:ExpidusOS/gokai;
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   outputs = { self, expidus-sdk, nixpkgs, gokai }:
     with expidus-sdk.lib;
@@ -36,7 +39,7 @@
           src = cleanSource self;
 
           depsListFile = ./deps.json;
-          vendorHash = "sha256-plkNSEDOD46dZJlZRlYHgAmYm1lIR7GAFXgnVzWYRX8=";
+          vendorHash = "sha256-+bF8dOGN/mvhfsj7gpLjcnvpZAOpq2eDHrBPlJi2NbE=";
 
           nativeBuildInputs = with pkgs; [
             pkg-config
@@ -44,7 +47,7 @@
 
           buildInputs = with pkgs; [
             pkgs.gokai
-          ] ++ pkgs.gokai.buildInputs;
+          ];
 
           meta = {
             description = "Next-generation desktop environment for ExpidusOS.";
@@ -64,7 +67,7 @@
             pkg-config
             pkgs.gokai-debug
             gdb
-          ] ++ pkgs.gokai.buildInputs;
+          ];
 
           LIBGL_DRIVERS_PATH = "${pkgs.mesa.drivers}/lib/dri";
           VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
