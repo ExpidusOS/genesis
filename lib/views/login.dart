@@ -169,6 +169,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                     labelText: 'Password',
                                   ),
                                   obscureText: true,
+                                  obscuringCharacter: '*',
                                 ),
                               ),
                               IconButton(
