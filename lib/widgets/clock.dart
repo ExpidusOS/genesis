@@ -3,9 +3,10 @@ import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:intl/intl.dart';
 
 class DigitalClock extends StatefulWidget {
-  const DigitalClock({ super.key, this.style });
+  const DigitalClock({ super.key, this.style, this.format, });
 
   final TextStyle? style;
+  final DateFormat? format;
 
   @override
   State<DigitalClock> createState() => _DigitalClockState();
@@ -36,7 +37,7 @@ class _DigitalClockState extends State<DigitalClock> {
   @override
   Widget build(BuildContext context)
     => Text(
-      DateFormat.jm().format(currentTime),
+      (widget.format ?? DateFormat.jm()).format(currentTime),
       style: widget.style,
     );
 }

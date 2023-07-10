@@ -21,6 +21,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
   void _onAccountManagerChange() {
     final accountManager = _gokai_context!.services['AccountManager'] as GokaiAccountManager;
     accountManager.getAll().then((accounts) => setState(() {
+      _accounts_key = UniqueKey();
     }));
   }
 
@@ -65,9 +66,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
           appBar: const GenesisShellPanel(
             showLeading: false,
           ),
-          endDrawer: Drawer(
-            width: 608,
-          ),
+          endDrawer: const ActionCenter(),
           body: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
