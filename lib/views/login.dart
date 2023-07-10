@@ -118,6 +118,12 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                                 Text(account.displayName),
                                               ],
                                             ),
+                                            // FIXME: why does this change back to null even though _selected_account isn't null
+                                            style: _selected_account == account
+                                              ? TextButton.styleFrom(
+                                                  backgroundColor: Theme.of(context).textTheme.displaySmall!.color!.withOpacity(0.12),
+                                                )
+                                              : null,
                                             onPressed: () => setState(() {
                                               _selected_account = account;
                                             }),
