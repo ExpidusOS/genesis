@@ -174,7 +174,8 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                               IconButton(
                                 icon: const Icon(Icons.arrow_circle_right),
                                 iconSize: 60,
-                                onPressed: () {},
+                                // TODO: use Gokai to figure out a way to determine what DE to start.
+                                onPressed: () => Navigator.pushReplacementNamed(context, '/desktop'),
                               ),
                             ]),
                       ],

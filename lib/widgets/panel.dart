@@ -1,5 +1,6 @@
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:flutter/material.dart' as material;
+import 'app_launcher.dart';
 import 'clock.dart';
 
 class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
@@ -24,7 +25,10 @@ class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: showLeading,
         leading: showLeading ? start ?? IconButton(
           icon: const Icon(Icons.apps),
-          onPressed: () => material.Scaffold.of(context).openDrawer(),
+          onPressed: () => showDialog(
+            context: context,
+            builder: (context) => const AppLauncher(),
+          ),
         ) : null,
         actions: [
           end ?? TextButton(
