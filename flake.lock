@@ -119,11 +119,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1689015245,
-        "narHash": "sha256-D37R6n/N7AZDH2Tbj04xhd12n9fxD3yWY+0Abpmce+I=",
+        "lastModified": 1689019946,
+        "narHash": "sha256-mS0BqRXzXDB/ulR0Bq2EctMuuIjRSwBmFrfrqonxUIU=",
         "owner": "ExpidusOS",
         "repo": "gokai",
-        "rev": "a06125455d9be7543dfe0c2cc256bbc0ed5bee49",
+        "rev": "69272d8385e43e9bb75770871e92773e26a5eae1",
         "type": "github"
       },
       "original": {
