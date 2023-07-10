@@ -16,6 +16,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
   Key _accounts_key = UniqueKey();
 
   GokaiContext? _gokai_context;
+  GokaiUserAccount? _selected_account;
 
   void _onAccountManagerChange() {
     final accountManager = _gokai_context!.services['AccountManager'] as GokaiAccountManager;
@@ -73,7 +74,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
               child: Card(
                 child: Container(
                   width: 600,
-                  height: 400,
+                  height: _selected_account == null ? 300 : 410,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -83,7 +84,10 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         _gokai_context == null
-                          ? const CircularProgressIndicator()
+                          ? Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: const CircularProgressIndicator(),
+                            )
                           : FutureBuilder(
                               key: _accounts_key,
                               future: (_gokai_context!.services['AccountManager'] as GokaiAccountManager).getAll(),
@@ -114,7 +118,9 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                                 Text(account.displayName),
                                               ],
                                             ),
-                                            onPressed: () {}
+                                            onPressed: () => setState(() {
+                                              _selected_account = account;
+                                            }),
                                           ),
                                         )
                                       ).toList(),
@@ -141,9 +147,30 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                     ),
                                   );
                                 }
-                                return const CircularProgressIndicator();
+                                return Padding(
+                                  padding: const EdgeInsets.all(32.0),
+                                  child: const CircularProgressIndicator(),
+                                );
                               },
                             ),
+                        ...(_selected_account == null
+                          ? []
+                          : [
+                              SizedBox(
+                                width: 400,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                  ),
+                                  obscureText: true,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.arrow_circle_right),
+                                iconSize: 60,
+                                onPressed: () {},
+                              ),
+                            ]),
                       ],
                     ),
                   ),
