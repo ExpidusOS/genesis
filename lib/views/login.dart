@@ -89,27 +89,36 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                               future: (_gokai_context!.services['AccountManager'] as GokaiAccountManager).getAll(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  return ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    padding: const EdgeInsets.all(8.0),
-                                    children: snapshot.data!.map((account) =>
-                                      Column(
-                                        children: [
-                                          IconButton(
-                                            icon: account.picture == null
-                                              ? const Icon(Icons.account_circle)
-                                              : Image.file(
-                                                  File(account.picture!),
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return const Icon(Icons.account_circle);
-                                                  }
-                                                ),
+                                  return SizedBox(
+                                    height: 210,
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      padding: const EdgeInsets.all(8.0),
+                                      shrinkWrap: true,
+                                      children: snapshot.data!.map((account) =>
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextButton(
+                                            child: Column(
+                                              children: [
+                                                account.picture == null
+                                                  ? const Icon(Icons.account_circle, size: 150)
+                                                  : Image.file(
+                                                      File(account.picture!),
+                                                      width: 150,
+                                                      height: 150,
+                                                      errorBuilder: (context, error, stackTrace) {
+                                                        return const Icon(Icons.account_circle, size: 150);
+                                                      }
+                                                    ),
+                                                Text(account.displayName),
+                                              ],
+                                            ),
                                             onPressed: () {}
                                           ),
-                                          Text(account.displayName),
-                                        ],
-                                      )
-                                    ).toList(),
+                                        )
+                                      ).toList(),
+                                    ),
                                   );
                                 }
 
