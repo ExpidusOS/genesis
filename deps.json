@@ -10,6 +10,7 @@
       "libtokyo_flutter",
       "gokai",
       "intl",
+      "args",
       "flutter_test",
       "flutter_lints"
     ]
@@ -241,6 +242,13 @@
     "version": "0.0.99",
     "kind": "transitive",
     "source": "sdk",
+    "dependencies": []
+  },
+  {
+    "name": "args",
+    "version": "2.4.2",
+    "kind": "direct",
+    "source": "hosted",
     "dependencies": []
   },
   {
