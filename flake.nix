@@ -39,7 +39,7 @@
           src = cleanSource self;
 
           depsListFile = ./deps.json;
-          vendorHash = "sha256-BTAChqZUYxBFgE9iDaRxggCHILqfscNc7j7BHfLcIMc=";
+          vendorHash = "sha256-ludtv+whB+7zVt1B+q2gujMTZOopQFw5ab1dll2ZDtM=";
 
           nativeBuildInputs = with pkgs; [
             pkg-config

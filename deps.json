@@ -11,6 +11,8 @@
       "gokai",
       "intl",
       "args",
+      "dbus",
+      "xdg_directories",
       "flutter_test",
       "flutter_lints"
     ]
@@ -242,6 +244,84 @@
     "version": "0.0.99",
     "kind": "transitive",
     "source": "sdk",
+    "dependencies": []
+  },
+  {
+    "name": "xdg_directories",
+    "version": "1.0.0",
+    "kind": "direct",
+    "source": "hosted",
+    "dependencies": [
+      "meta",
+      "path",
+      "process"
+    ]
+  },
+  {
+    "name": "process",
+    "version": "4.2.4",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "file",
+      "path",
+      "platform"
+    ]
+  },
+  {
+    "name": "platform",
+    "version": "3.1.0",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": []
+  },
+  {
+    "name": "file",
+    "version": "6.1.4",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "meta",
+      "path"
+    ]
+  },
+  {
+    "name": "dbus",
+    "version": "0.7.8",
+    "kind": "direct",
+    "source": "hosted",
+    "dependencies": [
+      "args",
+      "ffi",
+      "meta",
+      "xml"
+    ]
+  },
+  {
+    "name": "xml",
+    "version": "6.3.0",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "collection",
+      "meta",
+      "petitparser"
+    ]
+  },
+  {
+    "name": "petitparser",
+    "version": "5.4.0",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "meta"
+    ]
+  },
+  {
+    "name": "ffi",
+    "version": "2.0.2",
+    "kind": "transitive",
+    "source": "hosted",
     "dependencies": []
   },
   {
@@ -518,13 +598,6 @@
     ]
   },
   {
-    "name": "ffi",
-    "version": "2.0.2",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": []
-  },
-  {
     "name": "path_provider_platform_interface",
     "version": "2.0.6",
     "kind": "transitive",
@@ -533,23 +606,6 @@
       "flutter",
       "platform",
       "plugin_platform_interface"
-    ]
-  },
-  {
-    "name": "platform",
-    "version": "3.1.0",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": []
-  },
-  {
-    "name": "file",
-    "version": "6.1.4",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "meta",
-      "path"
     ]
   },
   {
@@ -588,28 +644,6 @@
       "path",
       "path_provider_platform_interface",
       "xdg_directories"
-    ]
-  },
-  {
-    "name": "xdg_directories",
-    "version": "1.0.0",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "meta",
-      "path",
-      "process"
-    ]
-  },
-  {
-    "name": "process",
-    "version": "4.2.4",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "file",
-      "path",
-      "platform"
     ]
   },
   {

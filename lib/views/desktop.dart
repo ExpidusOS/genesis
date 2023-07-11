@@ -22,16 +22,29 @@ class _ActionCenterIntent extends Intent {
 }
 
 class _DesktopShortcutsManager extends ShortcutManager {
-  _DesktopShortcutsManager({ super.shortcuts });
+  _DesktopShortcutsManager({ super.shortcuts, super.modal });
 
   @override
   KeyEventResult handleKeypress(BuildContext context, RawKeyEvent event) {
     final result = super.handleKeypress(context, event);
-    if (result == KeyEventResult.handled) {
-      print('Handled shortcut $event in $context');
+    if (result != KeyEventResult.handled) {
+      if (event.data.isMetaPressed) {
+        final matchedIntent = shortcuts[LogicalKeySet(event.logicalKey)];
+        if (matchedIntent != null) {
+          final primaryContext = primaryFocus?.context;
+          if (primaryContext != null) {
+            final action = Actions.maybeFind<Intent>(
+              primaryContext,
+              intent: matchedIntent,
+            );
+            if (action != null && action.isEnabled(matchedIntent)) {
+              final invokeResult = Actions.of(primaryContext).invokeAction(action, matchedIntent, primaryContext);
+              return action.toKeyEventResult(matchedIntent, invokeResult);
+            }
+          }
+        }
+      }
     } else {
-      print(RawKeyboard.instance.keysPressed);
-      print(RawKeyboard.instance.physicalKeysPressed);
       print(event);
     }
     return result;
@@ -63,8 +76,8 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
     return Shortcuts.manager(
       manager: _DesktopShortcutsManager(
         shortcuts: {
-          SingleActivator(LogicalKeyboardKey.keyA, meta: true): _ActionCenterIntent(),
-          LogicalKeySet(LogicalKeyboardKey.metaLeft, LogicalKeyboardKey.metaRight): _AppLauncherIntent(),
+          CharacterActivator('a', meta: true): _ActionCenterIntent(),
+          LogicalKeySet(LogicalKeyboardKey.superKey): _AppLauncherIntent(),
         },
       ),
       child: Actions(
