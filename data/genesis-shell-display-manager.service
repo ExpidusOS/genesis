@@ -1,0 +1,9 @@
+[Unit]
+Description=Genesis Shell Display Manager
+After=systemd-user-sessions.service
+
+[Service]
+ExecStart=genesis_shell --login
+
+[Install]
+Alias=display-manager.service

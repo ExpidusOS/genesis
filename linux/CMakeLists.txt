@@ -132,5 +132,8 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
     COMPONENT Runtime)
 endif()
 
+install(FILES "../data/genesis-shell-display-manager.service"
+  DESTINATION "${BUILD_BUNDLE_DIR}/lib/systemd/system")
+
 install(FILES "../data/manifest.yaml"
   DESTINATION "${BUILD_BUNDLE_DIR}/data")
