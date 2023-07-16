@@ -18,7 +18,10 @@
 
   inputs.gokai = {
     url = github:ExpidusOS/gokai;
-    inputs.nixpkgs.follows = "nixpkgs";
+    inputs = {
+      expidus-sdk.follows = "expidus-sdk";
+      nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, expidus-sdk, nixpkgs, gokai }:
