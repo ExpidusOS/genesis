@@ -13,6 +13,7 @@
       "args",
       "dbus",
       "xdg_directories",
+      "flutter_adaptive_scaffold",
       "flutter_test",
       "flutter_lints"
     ]
@@ -247,38 +248,18 @@
     "dependencies": []
   },
   {
-    "name": "xdg_directories",
-    "version": "1.0.0",
+    "name": "flutter_adaptive_scaffold",
+    "version": "0.1.6",
     "kind": "direct",
     "source": "hosted",
     "dependencies": [
-      "meta",
-      "path",
-      "process"
+      "flutter"
     ]
   },
   {
-    "name": "process",
-    "version": "4.2.4",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "file",
-      "path",
-      "platform"
-    ]
-  },
-  {
-    "name": "platform",
-    "version": "3.1.0",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": []
-  },
-  {
-    "name": "file",
-    "version": "6.1.4",
-    "kind": "transitive",
+    "name": "xdg_directories",
+    "version": "1.0.1",
+    "kind": "direct",
     "source": "hosted",
     "dependencies": [
       "meta",
@@ -446,7 +427,7 @@
   },
   {
     "name": "url_launcher_macos",
-    "version": "3.0.5",
+    "version": "3.0.6",
     "kind": "transitive",
     "source": "hosted",
     "dependencies": [
@@ -609,6 +590,23 @@
     ]
   },
   {
+    "name": "platform",
+    "version": "3.1.0",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": []
+  },
+  {
+    "name": "file",
+    "version": "6.1.4",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "meta",
+      "path"
+    ]
+  },
+  {
     "name": "shared_preferences_web",
     "version": "2.2.0",
     "kind": "transitive",
@@ -648,7 +646,7 @@
   },
   {
     "name": "shared_preferences_foundation",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "kind": "transitive",
     "source": "hosted",
     "dependencies": [
