@@ -1,8 +1,11 @@
+import 'package:gokai/widgets.dart';
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
+import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
 import 'package:genesis_shell/widgets.dart';
 import 'package:gokai/user/account.dart';
+import 'package:gokai/view/window.dart';
 import 'package:gokai/gokai.dart';
 import 'package:gokai/services.dart';
 
@@ -53,8 +56,10 @@ class _DesktopShortcutsManager extends ShortcutManager {
 
 class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
-  GokaiContext? _gokai_context;
+  GokaiContext? _gokaiContext;
+  GokaiWindowManager? _windowManager;
   GokaiUserAccount? _account;
+  List<GokaiWindow> _windows = [];
 
   @override
   void initState() {
@@ -64,9 +69,19 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
       final accountManager = ctx.services['AccountManager'] as GokaiAccountManager;
       final account = await accountManager.getCurrent();
 
+      final windowManager = ctx.services['WindowManager'] as GokaiWindowManager;
+      windowManager.onChange.add(() {
+        windowManager.getViewable().then((value) => setState(() {
+          _windows = value;
+        }));
+      });
+      final windows = await windowManager.getViewable();
+
       setState(() {
-        _gokai_context = ctx;
+        _gokaiContext = ctx;
         _account = account;
+        _windowManager = windowManager;
+        _windows = windows;
       });
     });
   }
@@ -105,6 +120,40 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                     fit: BoxFit.cover,
                   ),
                 ),
+              ),
+              Stack(
+                clipBehavior: Clip.none,
+                children: _windows.map(
+                  (e) => Positioned(
+                    left: e.rect.left,
+                    top: e.rect.top + (kToolbarHeight + 2.5),
+                    child: GokaiWindowView(
+                      id: e.id,
+                      windowManager: _windowManager!,
+                      decorationBuilder: (context, child, win) => SizedBox(
+                        width: win.rect.width,
+                        height: win.rect.height + kWindowBarHeight,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Scaffold(
+                            windowBar: WindowBar(
+                              leading: const Icon(Icons.window),
+                              title: Text(win.title ?? 'Untitled Window'),
+                              onMaximize: () {
+                                print(win);
+                              },
+                              onMinimize: () {},
+                              onClose: () {},
+                            ),
+                            body: child,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ).toList(),
               ),
               material.Scaffold(
                 key: _scaffold,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:libtokyo_flutter/libtokyo.dart';
 import 'package:gokai/user/account.dart';
 import 'package:intl/intl.dart';
@@ -43,7 +45,41 @@ class ActionCenter extends StatelessWidget {
                   ],
                 ),
               ),
-              Spacer(),
+              ...(userAccount != null ? [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: userAccount!.picture == null
+                            ? const Icon(Icons.account_circle, size: 75)
+                            : Image.file(
+                            File(userAccount!.picture!),
+                            width: 75,
+                            height: 75,
+                            frameBuilder: (context, child, frame, wasAsync) =>
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(64.0),
+                                  child: child,
+                                ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.account_circle, size: 75);
+                            }
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Text(
+                          userAccount!.displayName,
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ] : []),
+              const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Row(
