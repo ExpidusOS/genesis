@@ -62,6 +62,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   GokaiWindowManager? _windowManager;
   GokaiUserAccount? _account;
   List<GokaiWindow> _windows = [];
+  Map<String, Rect> _windowRects = {};
 
   @override
   void initState() {
@@ -132,11 +133,12 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                   clipBehavior: Clip.none,
                   children: _windows.map(
                     (e) => Positioned(
-                      left: e.rect.left,
-                      top: e.rect.top,
+                      left: (_windowRects[e.id] ?? e.rect).left,
+                      top: (_windowRects[e.id] ?? e.rect).top,
                       child: GokaiWindowView(
                         id: e.id,
                         windowManager: _windowManager!,
+                        size: (_windowRects[e.id] ?? e.rect).size,
                         decorationBuilder: (context, child, win) => SizedBox(
                           width: win.rect.width,
                           height: win.rect.height + kWindowBarHeight,
@@ -155,27 +157,25 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                     AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
                                       () => AllowMultipleVerticalDragGestureRecognizer(),
                                       (instance) {
-                                        final i = _windows.indexWhere((v) => v.id == e.id);
                                         instance.onUpdate = (details) {
-                                          final size = MediaQuery.sizeOf(context);
-                                          final rect = Rect.fromPoints(
-                                            Offset(
-                                              math.max(
-                                                e.rect.left + details.delta.dx,
-                                                size.width,
-                                              ),
-                                              math.max(
-                                                e.rect.top + details.delta.dy,
-                                                size.height,
-                                              )
+                                          final displaySize = MediaQuery.sizeOf(context);
+                                          final pos = Offset(
+                                            math.min(
+                                              details.globalPosition.dx,
+                                              displaySize.width,
                                             ),
-                                            Offset(e.rect.size.width, e.rect.size.height)
-                                          );
+                                            math.min(
+                                              details.globalPosition.dy,
+                                              displaySize.height,
+                                            )
+                                          ) - const Offset(0, kToolbarHeight + 10);
+                                          final size = (_windowRects[win.id] ?? win.rect).size;
+                                          final rect = Rect.fromPoints(pos, Offset(size.width, size.height));
 
-                                          _windows[i].setRect(rect);
-                                          _windowManager!.get(e.id).then((value) => setState(() {
-                                            _windows[i] = value;
-                                          }));
+                                          win.setRect(rect);
+                                          setState(() {
+                                            _windowRects[win.id] = rect;
+                                          });
                                         };
                                       }
                                     ),
@@ -184,7 +184,6 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                     useBitsdojo: false,
                                     leading: const Icon(Icons.window),
                                     title: Text(win.title ?? 'Untitled Window'),
-                                    onMaximize: () {},
                                     onMinimize: () {},
                                     onClose: () {},
                                   ),
