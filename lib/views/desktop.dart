@@ -121,45 +121,69 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                   ),
                 ),
               ),
-              Stack(
-                clipBehavior: Clip.none,
-                children: _windows.map(
-                  (e) => Positioned(
-                    left: e.rect.left,
-                    top: e.rect.top + (kToolbarHeight + 2.5),
-                    child: GokaiWindowView(
-                      id: e.id,
-                      windowManager: _windowManager!,
-                      decorationBuilder: (context, child, win) => SizedBox(
-                        width: win.rect.width,
-                        height: win.rect.height + kWindowBarHeight,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Scaffold(
-                            windowBar: WindowBar(
-                              leading: const Icon(Icons.window),
-                              title: Text(win.title ?? 'Untitled Window'),
-                              onMaximize: () {
-                                print(win);
-                              },
-                              onMinimize: () {},
-                              onClose: () {},
-                            ),
-                            body: child,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ).toList(),
-              ),
               material.Scaffold(
                 key: _scaffold,
                 backgroundColor: Colors.transparent,
                 appBar: const GenesisShellPanel(),
                 endDrawer: ActionCenter(userAccount: _account),
+                body: Stack(
+                  clipBehavior: Clip.none,
+                  children: _windows.map(
+                    (e) => Positioned(
+                      left: e.rect.left,
+                      top: e.rect.top,
+                      child: GokaiWindowView(
+                        id: e.id,
+                        windowManager: _windowManager!,
+                        decorationBuilder: (context, child, win) => SizedBox(
+                          width: win.rect.width,
+                          height: win.rect.height + kWindowBarHeight,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Scaffold(
+                              windowBar: PreferredSize(
+                                preferredSize: Size(
+                                  MediaQuery.sizeOf(context).width,
+                                  WindowBar.preferredHeightFor(context, Size.fromHeight(kWindowBarHeight)),
+                                ),
+                                // FIXME: using the drag causes a bad any_cast
+                                child: Draggable(
+                                  onDragUpdate: (detail) {
+                                    final i = _windows.indexWhere((w) => e.id == w.id);
+                                    final rect = detail.globalPosition & e.rect.size;
+                                    _windows[i].setRect(rect);
+                                    _windowManager!.get(e.id).then((value) => setState(() {
+                                      _windows[i] = value;
+                                    }));
+                                  },
+                                  feedback: WindowBar(
+                                    useBitsdojo: false,
+                                    leading: const Icon(Icons.window),
+                                    title: Text(win.title ?? 'Untitled Window'),
+                                    onMaximize: () {},
+                                    onMinimize: () {},
+                                    onClose: () {},
+                                  ),
+                                  child: WindowBar(
+                                    useBitsdojo: false,
+                                    leading: const Icon(Icons.window),
+                                    title: Text(win.title ?? 'Untitled Window'),
+                                    onMaximize: () {},
+                                    onMinimize: () {},
+                                    onClose: () {},
+                                  ),
+                                ),
+                              ),
+                              body: child,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ).toList(),
+                ),
               ),
             ],
           ),
