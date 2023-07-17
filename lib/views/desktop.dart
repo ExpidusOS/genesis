@@ -137,7 +137,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                         builder: (_) => Builder(
                           builder: (context) {
                             final displaySize = MediaQuery.sizeOf(context);
-                            final rect = Rect.fromPoints(Offset.zero, Offset(displaySize.width, displaySize.height));
+                            final rect = Rect.fromLTWH(0, 0, displaySize.width, displaySize.height);
                             final window = _windows.where((e) => e.isActive).toList();
                             if (window.isEmpty) {
                               if (_windows.isEmpty) return const SizedBox();
@@ -209,7 +209,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                                     )
                                                   ) - const Offset(0, kToolbarHeight + 10);
                                                   final size = (_windowRects[win.id] ?? win.rect).size;
-                                                  final rect = Rect.fromPoints(pos, Offset(size.width, size.height));
+                                                  final rect = Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
 
                                                   win.setRect(rect);
                                                   setState(() {
@@ -223,6 +223,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                             useBitsdojo: false,
                                             leading: const Icon(Icons.window),
                                             title: Text(win.title ?? 'Untitled Window'),
+                                            onMaximize: () {},
                                             onMinimize: () {},
                                             onClose: () {},
                                           ),
