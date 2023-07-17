@@ -207,7 +207,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                                       details.globalPosition.dy,
                                                       displaySize.height,
                                                     )
-                                                  ) - const Offset(0, kToolbarHeight + 10);
+                                                  ) - const Offset(5, kToolbarHeight + 5);
                                                   final size = (_windowRects[win.id] ?? win.rect).size;
                                                   final rect = Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
 
