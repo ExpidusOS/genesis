@@ -129,73 +129,116 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                 backgroundColor: Colors.transparent,
                 appBar: const GenesisShellPanel(),
                 endDrawer: ActionCenter(userAccount: _account),
-                body: Stack(
-                  clipBehavior: Clip.none,
-                  children: _windows.map(
-                    (e) => Positioned(
-                      left: (_windowRects[e.id] ?? e.rect).left,
-                      top: (_windowRects[e.id] ?? e.rect).top,
-                      child: GokaiWindowView(
-                        id: e.id,
-                        windowManager: _windowManager!,
-                        size: (_windowRects[e.id] ?? e.rect).size,
-                        decorationBuilder: (context, child, win) => SizedBox(
-                          width: win.rect.width,
-                          height: win.rect.height + kWindowBarHeight,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Scaffold(
-                              windowBar: PreferredSize(
-                                preferredSize: Size(
-                                  MediaQuery.sizeOf(context).width,
-                                  WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
-                                ),
-                                child: RawGestureDetector(
-                                  gestures: {
-                                    AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
-                                      () => AllowMultipleVerticalDragGestureRecognizer(),
-                                      (instance) {
-                                        instance.onUpdate = (details) {
-                                          final displaySize = MediaQuery.sizeOf(context);
-                                          final pos = Offset(
-                                            math.min(
-                                              details.globalPosition.dx,
-                                              displaySize.width,
-                                            ),
-                                            math.min(
-                                              details.globalPosition.dy,
-                                              displaySize.height,
-                                            )
-                                          ) - const Offset(0, kToolbarHeight + 10);
-                                          final size = (_windowRects[win.id] ?? win.rect).size;
-                                          final rect = Rect.fromPoints(pos, Offset(size.width, size.height));
+                body: AdaptiveLayout(
+                  body: SlotLayout(
+                    config: {
+                      Breakpoints.smallAndUp: SlotLayout.from(
+                        key: const Key('smallBody'),
+                        builder: (_) => Builder(
+                          builder: (context) {
+                            final displaySize = MediaQuery.sizeOf(context);
+                            final rect = Rect.fromPoints(Offset.zero, Offset(displaySize.width, displaySize.height));
+                            final window = _windows.where((e) => e.isActive).toList();
+                            if (window.isEmpty) {
+                              if (_windows.isEmpty) return const SizedBox();
 
-                                          win.setRect(rect);
-                                          setState(() {
-                                            _windowRects[win.id] = rect;
-                                          });
-                                        };
-                                      }
+                              if (context.mounted) {
+                                _windows.first.setRect(rect);
+                                _windows.first.setActive(true);
+                              }
+
+                              return GokaiWindowView(
+                                id: _windows.first.id,
+                                size: displaySize,
+                                windowManager: _windowManager!,
+                              );
+                            }
+
+                            if (context.mounted) {
+                              _windows.first.setRect(rect);
+                            }
+
+                            return GokaiWindowView(
+                              id: window[0].id,
+                              size: displaySize,
+                              windowManager: _windowManager!,
+                            );
+                          },
+                        ),
+                      ),
+                      Breakpoints.largeDesktop: SlotLayout.from(
+                        key: const Key('largeDesktopBody'),
+                        builder: (_) => Stack(
+                          clipBehavior: Clip.none,
+                          children: _windows.map(
+                            (e) => Positioned(
+                              left: (_windowRects[e.id] ?? e.rect).left,
+                              top: (_windowRects[e.id] ?? e.rect).top,
+                              child: GokaiWindowView(
+                                id: e.id,
+                                windowManager: _windowManager!,
+                                size: (_windowRects[e.id] ?? e.rect).size,
+                                decorationBuilder: (context, child, win) => SizedBox(
+                                  width: win.rect.width,
+                                  height: win.rect.height + kWindowBarHeight,
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
                                     ),
-                                  },
-                                  child: WindowBar(
-                                    useBitsdojo: false,
-                                    leading: const Icon(Icons.window),
-                                    title: Text(win.title ?? 'Untitled Window'),
-                                    onMinimize: () {},
-                                    onClose: () {},
+                                    child: Scaffold(
+                                      windowBar: PreferredSize(
+                                        preferredSize: Size(
+                                          MediaQuery.sizeOf(context).width,
+                                          WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
+                                        ),
+                                        child: RawGestureDetector(
+                                          gestures: {
+                                            AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
+                                              () => AllowMultipleVerticalDragGestureRecognizer(),
+                                              (instance) {
+                                                instance.onUpdate = (details) {
+                                                  final displaySize = MediaQuery.sizeOf(context);
+                                                  final pos = Offset(
+                                                    math.min(
+                                                      details.globalPosition.dx,
+                                                      displaySize.width,
+                                                    ),
+                                                    math.min(
+                                                      details.globalPosition.dy,
+                                                      displaySize.height,
+                                                    )
+                                                  ) - const Offset(0, kToolbarHeight + 10);
+                                                  final size = (_windowRects[win.id] ?? win.rect).size;
+                                                  final rect = Rect.fromPoints(pos, Offset(size.width, size.height));
+
+                                                  win.setRect(rect);
+                                                  setState(() {
+                                                    _windowRects[win.id] = rect;
+                                                  });
+                                                };
+                                              }
+                                            ),
+                                          },
+                                          child: WindowBar(
+                                            useBitsdojo: false,
+                                            leading: const Icon(Icons.window),
+                                            title: Text(win.title ?? 'Untitled Window'),
+                                            onMinimize: () {},
+                                            onClose: () {},
+                                          ),
+                                        ),
+                                      ),
+                                      body: child,
+                                    ),
                                   ),
                                 ),
                               ),
-                              body: child,
                             ),
-                          ),
+                          ).toList(),
                         ),
                       ),
-                    ),
-                  ).toList(),
+                    },
+                  ),
                 ),
               ),
             ],
