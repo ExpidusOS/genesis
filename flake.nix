@@ -34,6 +34,12 @@
             gokai-debug = gokai.packages.${system}.sdk-debug;
           })
         ];
+
+        flutter-engine = pkgs.runCommand pkgs.flutter-engine.name {} ''
+          mkdir -p $out/src
+          find ${pkgs.flutter-engine.src}/src -maxdepth 1 -mindepth 1 -exec ln -sf {} $out/src \;
+          ln -s ${pkgs.flutter-engine}/out $out/src/out
+        '';
       in {
         packages.default = pkgs.flutter.buildFlutterApplication {
           pname = "genesis-shell";
@@ -43,6 +49,11 @@
 
           depsListFile = ./deps.json;
           vendorHash = "sha256-Z8YR4QgVWOuB73Qsq5qlXr/SafR9FoZuYBpvyjQOvoo=";
+
+          flutterBuildFlags = [
+            "--local-engine=${flutter-engine}/src/out/host_release"
+            "--local-engine-src-path=${flutter-engine}/src"
+          ];
 
           nativeBuildInputs = with pkgs; [
             pkg-config
