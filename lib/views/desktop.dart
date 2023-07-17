@@ -1,8 +1,10 @@
+import 'dart:math' as math;
 import 'package:gokai/widgets.dart';
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
+import 'package:genesis_shell/gestures.dart';
 import 'package:genesis_shell/widgets.dart';
 import 'package:gokai/user/account.dart';
 import 'package:gokai/view/window.dart';
@@ -146,25 +148,38 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                               windowBar: PreferredSize(
                                 preferredSize: Size(
                                   MediaQuery.sizeOf(context).width,
-                                  WindowBar.preferredHeightFor(context, Size.fromHeight(kWindowBarHeight)),
+                                  WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
                                 ),
-                                child: Draggable(
-                                  onDragUpdate: (detail) {
-                                    final i = _windows.indexWhere((w) => e.id == w.id);
-                                    final rect = detail.globalPosition & e.rect.size;
-                                    _windows[i].setRect(rect);
-                                    _windowManager!.get(e.id).then((value) => setState(() {
-                                      _windows[i] = value;
-                                    }));
+                                child: RawGestureDetector(
+                                  gestures: {
+                                    AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
+                                      () => AllowMultipleVerticalDragGestureRecognizer(),
+                                      (instance) {
+                                        final i = _windows.indexWhere((v) => v.id == e.id);
+                                        instance.onUpdate = (details) {
+                                          final size = MediaQuery.sizeOf(context);
+                                          final rect = Rect.fromPoints(
+                                            Offset(
+                                              math.max(
+                                                e.rect.left + details.delta.dx,
+                                                size.width,
+                                              ),
+                                              math.max(
+                                                e.rect.top + details.delta.dy,
+                                                size.height,
+                                              )
+                                            ),
+                                            Offset(e.rect.size.width, e.rect.size.height)
+                                          );
+
+                                          _windows[i].setRect(rect);
+                                          _windowManager!.get(e.id).then((value) => setState(() {
+                                            _windows[i] = value;
+                                          }));
+                                        };
+                                      }
+                                    ),
                                   },
-                                  feedback: WindowBar(
-                                    useBitsdojo: false,
-                                    leading: const Icon(Icons.window),
-                                    title: Text(win.title ?? 'Untitled Window'),
-                                    onMaximize: () {},
-                                    onMinimize: () {},
-                                    onClose: () {},
-                                  ),
                                   child: WindowBar(
                                     useBitsdojo: false,
                                     leading: const Icon(Icons.window),
