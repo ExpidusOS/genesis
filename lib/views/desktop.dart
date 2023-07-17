@@ -148,7 +148,6 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                   MediaQuery.sizeOf(context).width,
                                   WindowBar.preferredHeightFor(context, Size.fromHeight(kWindowBarHeight)),
                                 ),
-                                // FIXME: using the drag causes a bad any_cast
                                 child: Draggable(
                                   onDragUpdate: (detail) {
                                     final i = _windows.indexWhere((w) => e.id == w.id);
