@@ -112,7 +112,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                 body: AdaptiveLayout(
                   body: SlotLayout(
                     config: {
-                      Breakpoints.small: SlotLayout.from(
+                      Breakpoints.smallAndUp: SlotLayout.from(
                         key: const Key('smallBody'),
                         builder: (context) =>
                           Consumer<WindowViewModel>(
