@@ -46,6 +46,7 @@ class AppLauncher extends StatelessWidget {
                                   }
 
                                   win.setActive(true);
+                                  Navigator.of(context, rootNavigator: true).pop();
                                 },
                                 child: SizedBox(
                                   width: win.rect.width,
