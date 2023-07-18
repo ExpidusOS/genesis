@@ -1,58 +1,13 @@
-import 'package:gokai/gokai.dart';
-import 'package:gokai/services/window_manager.dart';
-import 'package:gokai/view/window.dart';
+import 'package:genesis_shell/models.dart';
 import 'package:gokai/widgets.dart';
 import 'package:libtokyo_flutter/libtokyo.dart';
+import 'package:provider/provider.dart';
 
-class AppLauncher extends StatefulWidget {
+class AppLauncher extends StatelessWidget {
   const AppLauncher({ super.key });
 
   @override
-  State<AppLauncher> createState() => _AppLauncherState();
-}
-
-class _AppLauncherState extends State<AppLauncher> {
-  GokaiContext? _gokaiContext;
-  GokaiWindowManager? _windowManager;
-  List<GokaiWindow> _windows = [];
-
-  void _onChange() {
-    _windowManager!.getViewable().then((value) => setState(() {
-      _windows = value;
-    }));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    GokaiContext().init().then((ctx) async {
-      final windowManager = ctx.services['WindowManager'] as GokaiWindowManager;
-      windowManager.onChange.add(_onChange);
-      final windows = await windowManager.getViewable();
-
-      setState(() {
-        _gokaiContext = ctx;
-        _windowManager = windowManager;
-        _windows = windows;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    if (_windowManager != null) {
-      _windowManager!.onChange.remove(_onChange);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final coloredTextTheme = Theme.of(context).colorScheme.brightness == Brightness.dark
-      ? Theme.of(context).typography.white
-      : Theme.of(context).typography.black;
     final displaySize = MediaQuery.sizeOf(context);
     return ConstrainedBox(
       constraints: BoxConstraints.expand(
@@ -69,36 +24,47 @@ class _AppLauncherState extends State<AppLauncher> {
                 width: displaySize.width,
                 height: displaySize.height / 2.5,
                 child: Center(
-                  child: _windows.isEmpty
-                    ? Text(
-                      'No applications are opened',
-                      style: Theme.of(context).textTheme.displayMedium,
-                    )
-                    : ListView(
+                  child: Consumer<WindowViewModel>(
+                    builder: (context, model, child) {
+                      if (model.items.isEmpty) {
+                        return Text(
+                          'No applications are opened',
+                          style: Theme.of(context).textTheme.displayMedium,
+                        );
+                      }
+
+                      return ListView(
                         scrollDirection: Axis.horizontal,
-                        children: (_windows..sort((a, b) => a.isActive == b.isActive ? 0 : -1)).map(
-                          (e) => Padding(
+                        children: model.activeFirstItems.map(
+                          (win) => Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Card(
                               child: InkWell(
                                 onTap: () {
-                                  final active = _windows.where((e) => e.isActive).toList();
-                                  if (active.isNotEmpty) active.forEach((e) => e.setActive(false));
-                                  e.setActive(true);
-                                  Navigator.pop(context);
+                                  for (final activeWindow in model.active) {
+                                    activeWindow.setActive(false);
+                                  }
+
+                                  win.setActive(true);
                                 },
                                 child: SizedBox(
-                                  width: e.rect.width,
-                                  height: e.rect.height + kWindowBarHeight,
+                                  width: win.rect.width,
+                                  height: win.rect.height + kWindowBarHeight,
                                   child: Scaffold(
                                     windowBar: WindowBar(
                                       useBitsdojo: false,
                                       leading: const Icon(Icons.window),
-                                      title: Text(e.title ?? 'Untitled Window'),
+                                      title: Text(win.title ?? 'Untitled Window'),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                          topRight: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                        ),
+                                      ),
                                     ),
                                     body: GokaiWindowView(
-                                      id: e.id,
-                                      windowManager: _windowManager!,
+                                      id: win.id,
+                                      windowManager: model.windowManager,
                                       interactive: false,
                                     ),
                                   ),
@@ -107,7 +73,9 @@ class _AppLauncherState extends State<AppLauncher> {
                             ),
                           )
                         ).toList(),
-                      ),
+                      );
+                    }
+                  ),
                 ),
               ),
             ),

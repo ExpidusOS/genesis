@@ -29,6 +29,7 @@ dependencies:
   dbus: ^0.7.8
   xdg_directories: ^1.0.0
   flutter_adaptive_scaffold: ^0.1.6
+  provider: ^6.0.5
 
 dependency_overrides:
   libtokyo:

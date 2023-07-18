@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:genesis_shell/models.dart';
 import 'package:gokai/widgets.dart';
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
@@ -10,6 +11,7 @@ import 'package:gokai/user/account.dart';
 import 'package:gokai/view/window.dart';
 import 'package:gokai/gokai.dart';
 import 'package:gokai/services.dart';
+import 'package:provider/provider.dart';
 
 class GenesisShellDesktop extends StatefulWidget {
   const GenesisShellDesktop({super.key});
@@ -56,12 +58,9 @@ class _DesktopShortcutsManager extends ShortcutManager {
 
 class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
-  UniqueKey _mobileUiKey = UniqueKey();
+  final Map<String, Rect> _windowRects = {};
   GokaiContext? _gokaiContext;
-  GokaiWindowManager? _windowManager;
   GokaiUserAccount? _account;
-  List<GokaiWindow> _windows = [];
-  Map<String, Rect> _windowRects = {};
 
   @override
   void initState() {
@@ -71,28 +70,9 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
       final accountManager = ctx.services['AccountManager'] as GokaiAccountManager;
       final account = await accountManager.getCurrent();
 
-      final windowManager = ctx.services['WindowManager'] as GokaiWindowManager;
-      windowManager.onChange.add(() {
-        windowManager.getViewable().then((value) => setState(() {
-          _windows = value;
-          _mobileUiKey = UniqueKey();
-        }));
-      });
-
-      windowManager.onActive.add((id) {
-        windowManager.getViewable().then((value) => setState(() {
-          _windows = value;
-          _mobileUiKey = UniqueKey();
-        }));
-      });
-
-      final windows = await windowManager.getViewable();
-
       setState(() {
         _gokaiContext = ctx;
         _account = account;
-        _windowManager = windowManager;
-        _windows = windows;
       });
     });
   }
@@ -141,108 +121,113 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                 body: AdaptiveLayout(
                   body: SlotLayout(
                     config: {
-                      Breakpoints.smallAndUp: SlotLayout.from(
+                      Breakpoints.small: SlotLayout.from(
                         key: const Key('smallBody'),
-                        builder: (_) => Builder(
-                          key: _mobileUiKey,
-                          builder: (context) {
-                            final displaySize = MediaQuery.sizeOf(context);
-                            final rect = Rect.fromLTWH(0, 0, displaySize.width, displaySize.height);
-                            final window = _windows.where((e) => e.isActive).toList();
-                            if (window.isEmpty) {
-                              if (_windows.isEmpty) return const SizedBox();
+                        builder: (context) =>
+                          Consumer<WindowViewModel>(
+                            builder: (context, model, child) {
+                              final displaySize = MediaQuery.sizeOf(context);
+                              final rect = Rect.fromLTWH(0, 0, displaySize.width, displaySize.height);
 
-                              if (context.mounted) {
-                                _windows.first.setRect(rect);
-                                _windows.first.setActive(true);
+                              if (model.active.isEmpty) {
+                                return const SizedBox();
                               }
 
-                              return const SizedBox();
-                            }
+                              final win = model.active.first;
 
-                            if (context.mounted) {
-                              _windows.first.setRect(rect);
-                            }
+                              if (context.mounted) {
+                                win.setRect(rect);
+                              }
 
-                            return GokaiWindowView(
-                              id: window[0].id,
-                              size: displaySize,
-                              windowManager: _windowManager!,
-                            );
-                          },
-                        ),
+                              return GokaiWindowView(
+                                id: win.id,
+                                size: displaySize,
+                                windowManager: model.windowManager,
+                              );
+                            }
+                          ),
                       ),
-                      Breakpoints.largeDesktop: SlotLayout.from(
-                        key: const Key('largeDesktopBody'),
-                        builder: (_) => Stack(
-                          clipBehavior: Clip.none,
-                          children: (_windows..sort((a, b) => a.isActive == b.isActive ? 0 : -1)).reversed.map(
-                            (e) => Positioned(
-                              left: (_windowRects[e.id] ?? e.rect).left,
-                              top: (_windowRects[e.id] ?? e.rect).top,
-                              child: GokaiWindowView(
-                                id: e.id,
-                                windowManager: _windowManager!,
-                                size: (_windowRects[e.id] ?? e.rect).size,
-                                decorationBuilder: (context, child, win) => SizedBox(
-                                  width: win.rect.width,
-                                  height: win.rect.height + kWindowBarHeight,
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    child: Scaffold(
-                                      windowBar: PreferredSize(
-                                        preferredSize: Size(
-                                          MediaQuery.sizeOf(context).width,
-                                          WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
-                                        ),
-                                        child: RawGestureDetector(
-                                          gestures: {
-                                            AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
-                                              () => AllowMultipleVerticalDragGestureRecognizer(),
-                                              (instance) {
-                                                instance.onUpdate = (details) {
-                                                  final displaySize = MediaQuery.sizeOf(context);
-                                                  final pos = Offset(
-                                                    math.min(
-                                                      details.globalPosition.dx,
-                                                      displaySize.width,
-                                                    ),
-                                                    math.min(
-                                                      details.globalPosition.dy,
-                                                      displaySize.height,
-                                                    )
-                                                  ) - const Offset(5, kToolbarHeight + 5);
-                                                  final size = (_windowRects[win.id] ?? win.rect).size;
-                                                  final rect = Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
+                      Breakpoints.large: SlotLayout.from(
+                        key: const Key('largeBody'),
+                        builder: (context) =>
+                          Consumer<WindowViewModel>(
+                            builder: (context, model, child) =>
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: model.activeFirstItems.reversed.map(
+                                  (win) => Positioned(
+                                    left: (_windowRects[win.id] ?? win.rect).left,
+                                    top: (_windowRects[win.id] ?? win.rect).top,
+                                    child: GokaiWindowView(
+                                      id: win.id,
+                                      size: (_windowRects[win.id] ?? win.rect).size,
+                                      windowManager: model.windowManager,
+                                      decorationBuilder: (context, child, win) => SizedBox(
+                                        width: win.rect.width,
+                                        height: win.rect.height + kWindowBarHeight,
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20.0),
+                                          ),
+                                          child: Scaffold(
+                                            windowBar: PreferredSize(
+                                              preferredSize: Size(
+                                                MediaQuery.sizeOf(context).width,
+                                                WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
+                                              ),
+                                              child: RawGestureDetector(
+                                                gestures: {
+                                                  AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
+                                                    () => AllowMultipleVerticalDragGestureRecognizer(),
+                                                    (instance) {
+                                                      instance.onUpdate = (details) {
+                                                        final displaySize = MediaQuery.sizeOf(context);
+                                                        final pos = Offset(
+                                                          math.min(
+                                                            details.globalPosition.dx,
+                                                            displaySize.width,
+                                                          ),
+                                                          math.min(
+                                                            details.globalPosition.dy,
+                                                            displaySize.height,
+                                                          )
+                                                        ) - const Offset(5, kToolbarHeight + 5);
+                                                        final size = (_windowRects[win.id] ?? win.rect).size;
+                                                        final rect = Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
 
-                                                  win.setRect(rect);
-                                                  setState(() {
-                                                    _windowRects[win.id] = rect;
-                                                  });
-                                                };
-                                              }
+                                                        win.setRect(rect);
+                                                        setState(() {
+                                                          _windowRects[win.id] = rect;
+                                                        });
+                                                      };
+                                                    }
+                                                  ),
+                                                },
+                                                child: WindowBar(
+                                                  useBitsdojo: false,
+                                                  leading: const Icon(Icons.window),
+                                                  title: Text(win.title ?? 'Untitled Window'),
+                                                  onMaximize: () {},
+                                                  onMinimize: () {},
+                                                  onClose: () {},
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.only(
+                                                      topLeft: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                                      topRight: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          },
-                                          child: WindowBar(
-                                            useBitsdojo: false,
-                                            leading: const Icon(Icons.window),
-                                            title: Text(win.title ?? 'Untitled Window'),
-                                            onMaximize: () {},
-                                            onMinimize: () {},
-                                            onClose: () {},
+                                            body: child,
                                           ),
                                         ),
                                       ),
-                                      body: child,
                                     ),
-                                  ),
-                                ),
+                                  )
+                                ).toList(),
                               ),
-                            ),
-                          ).toList(),
-                        ),
+                          ),
                       ),
                     },
                   ),

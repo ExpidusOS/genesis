@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:dbus/dbus.dart';
+import 'package:genesis_shell/models.dart';
 import 'package:genesis_shell/views.dart';
 import 'package:gokai/gokai.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gokai/services/window_manager.dart';
 import 'package:libtokyo/libtokyo.dart' show ColorScheme;
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
+import 'package:provider/provider.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
 
 void main(List<String> args) {
@@ -74,15 +77,28 @@ class _GenesisShellState extends State<GenesisShell> {
 
   @override
   Widget build(BuildContext context) =>
-    TokyoApp(
-      title: 'Genesis Shell',
-      themeMode: ThemeMode.dark,
-      colorScheme: ColorScheme.night,
-      colorSchemeDark: ColorScheme.night,
-      initialRoute: widget.login ? '/' : '/desktop',
-      routes: {
-        '/': (ctx) => const GenesisShellLogIn(),
-        '/desktop': (ctx) => const GenesisShellDesktop(),
+    FutureBuilder(
+      future: GokaiContext().init(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => WindowViewModel(snapshot.data!)),
+            ],
+            child: TokyoApp(
+              title: 'Genesis Shell',
+              themeMode: ThemeMode.dark,
+              colorScheme: ColorScheme.night,
+              colorSchemeDark: ColorScheme.night,
+              initialRoute: widget.login ? '/' : '/desktop',
+              routes: {
+                '/': (ctx) => const GenesisShellLogIn(),
+                '/desktop': (ctx) => const GenesisShellDesktop(),
+              },
+            ),
+          );
+        }
+        return const SizedBox();
       },
     );
 }
