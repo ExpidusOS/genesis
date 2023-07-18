@@ -19,6 +19,7 @@ class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.all(5.0),
       child: AppBar(
         centerTitle: true,
+        elevation: 30,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
         ),

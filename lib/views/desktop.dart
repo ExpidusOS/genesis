@@ -49,8 +49,6 @@ class _DesktopShortcutsManager extends ShortcutManager {
           }
         }
       }
-    } else {
-      print(event);
     }
     return result;
   }
@@ -58,6 +56,7 @@ class _DesktopShortcutsManager extends ShortcutManager {
 
 class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
+  UniqueKey _mobileUiKey = UniqueKey();
   GokaiContext? _gokaiContext;
   GokaiWindowManager? _windowManager;
   GokaiUserAccount? _account;
@@ -76,8 +75,17 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
       windowManager.onChange.add(() {
         windowManager.getViewable().then((value) => setState(() {
           _windows = value;
+          _mobileUiKey = UniqueKey();
         }));
       });
+
+      windowManager.onActive.add((id) {
+        windowManager.getViewable().then((value) => setState(() {
+          _windows = value;
+          _mobileUiKey = UniqueKey();
+        }));
+      });
+
       final windows = await windowManager.getViewable();
 
       setState(() {
@@ -95,6 +103,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
       manager: _DesktopShortcutsManager(
         shortcuts: {
           CharacterActivator('a', meta: true): _ActionCenterIntent(),
+          LogicalKeySet(LogicalKeyboardKey.tab): VoidCallbackIntent(() {}),
           LogicalKeySet(LogicalKeyboardKey.superKey): _AppLauncherIntent(),
         },
       ),
@@ -135,6 +144,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                       Breakpoints.smallAndUp: SlotLayout.from(
                         key: const Key('smallBody'),
                         builder: (_) => Builder(
+                          key: _mobileUiKey,
                           builder: (context) {
                             final displaySize = MediaQuery.sizeOf(context);
                             final rect = Rect.fromLTWH(0, 0, displaySize.width, displaySize.height);
@@ -147,11 +157,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                 _windows.first.setActive(true);
                               }
 
-                              return GokaiWindowView(
-                                id: _windows.first.id,
-                                size: displaySize,
-                                windowManager: _windowManager!,
-                              );
+                              return const SizedBox();
                             }
 
                             if (context.mounted) {
@@ -170,7 +176,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                         key: const Key('largeDesktopBody'),
                         builder: (_) => Stack(
                           clipBehavior: Clip.none,
-                          children: _windows.map(
+                          children: (_windows..sort((a, b) => a.isActive == b.isActive ? 0 : -1)).reversed.map(
                             (e) => Positioned(
                               left: (_windowRects[e.id] ?? e.rect).left,
                               top: (_windowRects[e.id] ?? e.rect).top,

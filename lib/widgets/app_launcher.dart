@@ -16,17 +16,19 @@ class _AppLauncherState extends State<AppLauncher> {
   GokaiWindowManager? _windowManager;
   List<GokaiWindow> _windows = [];
 
+  void _onChange() {
+    _windowManager!.getViewable().then((value) => setState(() {
+      _windows = value;
+    }));
+  }
+
   @override
   void initState() {
     super.initState();
 
     GokaiContext().init().then((ctx) async {
       final windowManager = ctx.services['WindowManager'] as GokaiWindowManager;
-      windowManager.onChange.add(() {
-        windowManager.getViewable().then((value) => setState(() {
-          _windows = value;
-        }));
-      });
+      windowManager.onChange.add(_onChange);
       final windows = await windowManager.getViewable();
 
       setState(() {
@@ -35,6 +37,15 @@ class _AppLauncherState extends State<AppLauncher> {
         _windows = windows;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    if (_windowManager != null) {
+      _windowManager!.onChange.remove(_onChange);
+    }
   }
 
   @override
@@ -65,12 +76,14 @@ class _AppLauncherState extends State<AppLauncher> {
                     )
                     : ListView(
                         scrollDirection: Axis.horizontal,
-                        children: _windows.map(
+                        children: (_windows..sort((a, b) => a.isActive == b.isActive ? 0 : -1)).map(
                           (e) => Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Card(
                               child: InkWell(
                                 onTap: () {
+                                  final active = _windows.where((e) => e.isActive).toList();
+                                  if (active.isNotEmpty) active.forEach((e) => e.setActive(false));
                                   e.setActive(true);
                                   Navigator.pop(context);
                                 },
