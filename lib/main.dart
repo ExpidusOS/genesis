@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:dbus/dbus.dart';
+import 'package:flutter/services.dart';
 import 'package:genesis_shell/models.dart';
 import 'package:genesis_shell/views.dart';
 import 'package:gokai/gokai.dart';
@@ -84,6 +85,7 @@ class _GenesisShellState extends State<GenesisShell> {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (context) => WindowViewModel(snapshot.data!)),
+              Provider(create: (context) => snapshot.data!),
             ],
             child: TokyoApp(
               title: 'Genesis Shell',

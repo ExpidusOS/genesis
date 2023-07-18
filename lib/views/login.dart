@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:event/event.dart';
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:genesis_shell/widgets.dart';
 import 'package:gokai/user/account.dart';
@@ -18,7 +19,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
   GokaiContext? _gokai_context;
   GokaiUserAccount? _selected_account;
 
-  void _onAccountManagerChange() {
+  void _onAccountManagerChange(EventArgs? args) {
     final accountManager = _gokai_context!.services['AccountManager'] as GokaiAccountManager;
     accountManager.getAll().then((accounts) => setState(() {
       _accounts_key = UniqueKey();
@@ -34,7 +35,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
 
       setState(() {
         _gokai_context = ctx;
-        accountManager.onChange.add(_onAccountManagerChange);
+        accountManager.onChange.subscribe(_onAccountManagerChange);
       });
     });
   }
@@ -45,7 +46,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
 
     if (_gokai_context != null) {
       final accountManager = _gokai_context!.services['AccountManager'] as GokaiAccountManager;
-      accountManager.onChange.remove(_onAccountManagerChange);
+      accountManager.onChange.unsubscribe(_onAccountManagerChange);
     }
   }
 
@@ -83,9 +84,9 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         _gokai_context == null
-                          ? Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: const CircularProgressIndicator(),
+                          ? const Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: CircularProgressIndicator(),
                             )
                           : FutureBuilder(
                               key: _accounts_key,
@@ -102,6 +103,14 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: TextButton(
+                                            style: _selected_account == account
+                                              ? TextButton.styleFrom(
+                                                  backgroundColor: Theme.of(context).textTheme.displaySmall!.color!.withOpacity(0.12),
+                                                )
+                                              : null,
+                                            onPressed: () => setState(() {
+                                              _selected_account = account;
+                                            }),
                                             child: Column(
                                               children: [
                                                 account.picture == null
@@ -117,15 +126,6 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                                 Text(account.displayName),
                                               ],
                                             ),
-                                            // FIXME: why does this change back to null even though _selected_account isn't null
-                                            style: _selected_account == account
-                                              ? TextButton.styleFrom(
-                                                  backgroundColor: Theme.of(context).textTheme.displaySmall!.color!.withOpacity(0.12),
-                                                )
-                                              : null,
-                                            onPressed: () => setState(() {
-                                              _selected_account = account;
-                                            }),
                                           ),
                                         )
                                       ).toList(),
@@ -152,16 +152,16 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                     ),
                                   );
                                 }
-                                return Padding(
-                                  padding: const EdgeInsets.all(32.0),
-                                  child: const CircularProgressIndicator(),
+                                return const Padding(
+                                  padding: EdgeInsets.all(32.0),
+                                  child: CircularProgressIndicator(),
                                 );
                               },
                             ),
                         ...(_selected_account == null
                           ? []
                           : [
-                              SizedBox(
+                              const SizedBox(
                                 width: 400,
                                 child: TextField(
                                   decoration: InputDecoration(

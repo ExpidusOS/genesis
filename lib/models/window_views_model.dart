@@ -1,5 +1,5 @@
 import 'dart:collection';
-
+import 'package:event/event.dart';
 import 'package:gokai/gokai.dart';
 import 'package:gokai/services.dart';
 import 'package:gokai/view/window.dart';
@@ -11,9 +11,8 @@ class WindowViewModel extends ChangeNotifier {
 
   WindowViewModel(GokaiContext context)
     : windowManager = context.services['WindowManager'] as GokaiWindowManager {
-    windowManager.onChange.add(_onChange);
-    windowManager.onMapped.add(_onMapped);
-    _onChange();
+    windowManager.onChange.subscribe(_onChange);
+    _onChange(null);
   }
 
   UnmodifiableListView<GokaiWindow> get items => UnmodifiableListView(_items);
@@ -23,13 +22,11 @@ class WindowViewModel extends ChangeNotifier {
   static Future<WindowViewModel> init() async =>
     WindowViewModel(await GokaiContext().init());
 
-  void refresh() => _onChange();
+  void refresh() => _onChange(null);
 
-  void _onChange() {
+  void _onChange(EventArgs? args) {
     _items.clear();
     notifyListeners();
-
-    print(windowManager);
 
     windowManager.getViewable().then((value) {
       _items.clear();
@@ -38,12 +35,9 @@ class WindowViewModel extends ChangeNotifier {
     });
   }
 
-  void _onMapped(String id) => _onChange();
-
   @override
   void dispose() {
-    windowManager.onChange.remove(_onChange);
-    windowManager.onMapped.remove(_onMapped);
+    windowManager.onChange.unsubscribe(_onChange);
     super.dispose();
   }
 }

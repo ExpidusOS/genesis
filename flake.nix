@@ -48,7 +48,7 @@
           src = cleanSource self;
 
           depsListFile = ./deps.json;
-          vendorHash = "sha256-qt/9yCEsork1ulc5IOPT3Bipgrnu70uyS/IZV13ImFE=";
+          vendorHash = "sha256-ueoLm1J0HHVSC6cjVZ3QrRgacp5TrhYzUSyylgTHC3Q=";
 
           flutterBuildFlags = [
             "--local-engine=${flutter-engine}/src/out/host_release"

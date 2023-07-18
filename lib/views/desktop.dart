@@ -59,23 +59,6 @@ class _DesktopShortcutsManager extends ShortcutManager {
 class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
   final Map<String, Rect> _windowRects = {};
-  GokaiContext? _gokaiContext;
-  GokaiUserAccount? _account;
-
-  @override
-  void initState() {
-    super.initState();
-
-    GokaiContext().init().then((ctx) async {
-      final accountManager = ctx.services['AccountManager'] as GokaiAccountManager;
-      final account = await accountManager.getCurrent();
-
-      setState(() {
-        _gokaiContext = ctx;
-        _account = account;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +100,15 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                 key: _scaffold,
                 backgroundColor: Colors.transparent,
                 appBar: const GenesisShellPanel(),
-                endDrawer: ActionCenter(userAccount: _account),
+                endDrawer: FutureBuilder(
+                  future: (Provider.of<GokaiContext>(context).services['AccountManager'] as GokaiAccountManager).getCurrent(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ActionCenter(userAccount: snapshot.data!);
+                    }
+                    return const ActionCenter(userAccount: null);
+                  }
+                ),
                 body: AdaptiveLayout(
                   body: SlotLayout(
                     config: {
