@@ -68,11 +68,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1689725397,
-        "narHash": "sha256-enUBKXuc9tXyzD8tFr0y5Zl3XTf4ZWunvbrSfig9zT4=",
+        "lastModified": 1689788680,
+        "narHash": "sha256-c9FMSrbHW8lX7+t6XBziJuBmyGnBRQKGEnHueP47gzE=",
         "owner": "ExpidusOS",
         "repo": "gokai",
-        "rev": "b3c3979f6f64ae65dbef778302a28db04684b743",
+        "rev": "84f7ba5c9ace91e49d00449734c2e9e1dba43c21",
         "type": "github"
       },
       "original": {
@@ -116,11 +116,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1689731825,
-        "narHash": "sha256-vOOBa3/Uh1ggbIOeFjdjz+T9NLK+foRG1rxXz9vgqSs=",
+        "lastModified": 1689788289,
+        "narHash": "sha256-3mUKi+xUMI1lYXDSN2dEP0ctYnfUL5u20Nj8RxLZHWM=",
         "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "a63f3ca148cea643f2540959201d5be6cca5c6e7",
+        "rev": "cfe9a7ab9fe451d63cb3cd6a8f1dbdc2b4d921a5",
         "type": "github"
       },
       "original": {
