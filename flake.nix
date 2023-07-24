@@ -85,6 +85,7 @@
 
           LIBGL_DRIVERS_PATH = "${pkgs.mesa.drivers}/lib/dri";
           VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+          FLUTTER_ENGINE = "${flutter-engine}/src";
         };
       });
 }
