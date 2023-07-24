@@ -1,6 +1,7 @@
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:flutter/material.dart' as material;
 import 'app_launcher.dart';
+import 'battery_bar.dart';
 import 'clock.dart';
 
 class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
@@ -32,6 +33,7 @@ class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
           ),
         ) : null,
         actions: [
+          const BatteryBar(),
           end ?? TextButton(
             child: DigitalClock(
               style: Theme.of(context).textTheme.titleLarge,

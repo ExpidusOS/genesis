@@ -85,6 +85,7 @@ class _GenesisShellState extends State<GenesisShell> {
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (context) => WindowViewModel(snapshot.data!)),
+              ChangeNotifierProvider(create: (context) => BatteryModel(snapshot.data!)),
               Provider(create: (context) => snapshot.data!),
             ],
             child: TokyoApp(
