@@ -106,6 +106,10 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                     if (snapshot.hasData) {
                       return ActionCenter(userAccount: snapshot.data!);
                     }
+
+                    if (snapshot.hasError) {
+                      print(snapshot.error!);
+                    }
                     return const ActionCenter(userAccount: null);
                   }
                 ),

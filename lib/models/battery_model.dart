@@ -21,7 +21,7 @@ class BatteryModel extends ChangeNotifier {
   static Future<BatteryModel> init() async =>
     BatteryModel(await GokaiContext().init());
 
-  void _onChange(EventArgs? args) {
+  void _onChange(Value<String?>? args) {
     powerManager.getAll().then((value) {
       _items.clear();
       _items.addAll(value);

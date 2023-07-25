@@ -33,13 +33,22 @@ class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
           ),
         ) : null,
         actions: [
-          const BatteryBar(),
-          end ?? TextButton(
-            child: DigitalClock(
-              style: Theme.of(context).textTheme.titleLarge,
+          end ?? InkWell(
+            onTap: () => material.Scaffold.of(context).openEndDrawer(),
+            child: Row(
+              children: [
+                const BatteryBar(),
+                DigitalClock(
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ].map(
+                (child) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: child,
+                )
+              ).toList(),
             ),
-            onPressed: () => material.Scaffold.of(context).openEndDrawer(),
-          )
+          ),
         ],
       ),
     );

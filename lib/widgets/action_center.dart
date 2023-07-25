@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:libtokyo_flutter/libtokyo.dart';
+import 'package:genesis_shell/models.dart';
 import 'package:gokai/user/account.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'battery_indicator.dart';
 import 'clock.dart';
 
 class ActionCenter extends StatelessWidget {
@@ -79,6 +82,29 @@ class ActionCenter extends StatelessWidget {
                   ),
                 )
               ] : []),
+              Consumer<BatteryModel>(
+                builder: (context, model, child) {
+                  return ListView(
+                    shrinkWrap: true,
+                    children: model.items.where((device) => !device.isIntegrated ? device.name.isNotEmpty : true).map(
+                      (device) => ListTile(
+                        leading: SizedBox.square(
+                          dimension: 30,
+                          child: BatteryIndicator(
+                            device: device,
+                            withLabel: false,
+                          ),
+                        ),
+                        title: Text(device.name),
+                        subtitle: BatteryIndicator(
+                          device: device,
+                          withIcon: false,
+                        ),
+                      )
+                    ).toList(),
+                  );
+                },
+              ),
               const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,

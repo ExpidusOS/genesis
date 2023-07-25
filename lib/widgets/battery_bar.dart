@@ -1,7 +1,7 @@
 import 'package:genesis_shell/models.dart';
 import 'package:libtokyo_flutter/libtokyo.dart';
 import 'package:provider/provider.dart';
-import 'battery_icon.dart';
+import 'battery_indicator.dart';
 
 class BatteryBar extends StatelessWidget {
   const BatteryBar({
@@ -22,7 +22,7 @@ class BatteryBar extends StatelessWidget {
         return Flex(
           direction: direction,
           children: model.integratedItems.map(
-            (device) => BatteryIcon(device: device)
+            (device) => BatteryIndicator(device: device)
           ).toList(),
         );
       },
