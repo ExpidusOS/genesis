@@ -138,6 +138,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                 id: win.id,
                                 size: displaySize,
                                 windowManager: model.windowManager,
+                                inputManager: Provider.of<GokaiContext>(context).services['InputManager'] as GokaiInputManager,
                               );
                             }
                           ),
@@ -157,6 +158,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                       id: win.id,
                                       size: (_windowRects[win.id] ?? win.rect).size,
                                       windowManager: model.windowManager,
+                                      inputManager: Provider.of<GokaiContext>(context).services['InputManager'] as GokaiInputManager,
                                       decorationBuilder: (context, child, win) => SizedBox(
                                         width: win.rect.width,
                                         height: win.rect.height + kWindowBarHeight,
