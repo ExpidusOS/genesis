@@ -350,10 +350,21 @@
     "kind": "direct",
     "source": "git",
     "dependencies": [
+      "event",
       "flutter",
       "flutter_web_plugins",
       "plugin_platform_interface",
-      "vector_math"
+      "vector_math",
+      "arena_listener"
+    ]
+  },
+  {
+    "name": "arena_listener",
+    "version": "0.0.2",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "flutter"
     ]
   },
   {
@@ -379,6 +390,13 @@
       "meta",
       "vector_math"
     ]
+  },
+  {
+    "name": "event",
+    "version": "2.1.2",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": []
   },
   {
     "name": "libtokyo_flutter",
