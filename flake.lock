@@ -3,11 +3,11 @@
     "disko": {
       "flake": false,
       "locked": {
-        "lastModified": 1690739034,
-        "narHash": "sha256-roW02IaiQ3gnEEDMCDWL5YyN+C4nBf/te6vfL7rG0jk=",
+        "lastModified": 1691423834,
+        "narHash": "sha256-xcjbbK7j0xbX6VvYg03mI0DbcpjtVC6FuoO5SRYLPe4=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "4015740375676402a2ee6adebc3c30ea625b9a94",
+        "rev": "5a9bfa9fa612cc1888a886f6900bf7afcdfd8d92",
         "type": "github"
       },
       "original": {
@@ -20,18 +20,17 @@
       "inputs": {
         "disko": "disko",
         "flake-utils": "flake-utils",
-        "home-manager": "home-manager",
         "mobile-nixos": "mobile-nixos",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1691004590,
-        "narHash": "sha256-ToDieGqpG7KvAhGMFvyPPutdcMSXbWmRfg+LH1/JG3o=",
+        "lastModified": 1691462014,
+        "narHash": "sha256-wG7xbJ/scHkUoekbgLyeyBC6LuA9Z3qf2X/jXFnBwUQ=",
         "owner": "ExpidusOS",
         "repo": "sdk",
-        "rev": "95ddd8dd4475a0d36684470a3b11bee0006125df",
+        "rev": "b73e115dc38d37dc37aea7ec64b2c8d63c766e58",
         "type": "github"
       },
       "original": {
@@ -68,33 +67,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1691117838,
-        "narHash": "sha256-YuH5W7R29JKcfNpv4AvnR1XoK9hi/Kh8mdXxHJFefMc=",
+        "lastModified": 1691172873,
+        "narHash": "sha256-zLPqeuXhfZaD+X9vfzPYevwPxlDdPVd9RMNeIDcV8E0=",
         "owner": "ExpidusOS",
         "repo": "gokai",
-        "rev": "d1076fcfcd27467e2d75f78ca46b89a99230f4f3",
+        "rev": "d63642b42561644e8c4956495f415615e134a147",
         "type": "github"
       },
       "original": {
         "owner": "ExpidusOS",
         "repo": "gokai",
-        "type": "github"
-      }
-    },
-    "home-manager": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1685325875,
-        "narHash": "sha256-tevlLIMPeVNNYPd9UgjHApAUoFAnw9iohqUyj+LPp88=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "b372d7f8d5518aaba8a4058a453957460481afbc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "ref": "release-22.11",
-        "repo": "home-manager",
         "type": "github"
       }
     },
@@ -116,11 +98,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1691002917,
-        "narHash": "sha256-SyqWDOOVdvd0XXKd8YrlzHyG+STcsc+WONFmW9Mliu4=",
+        "lastModified": 1691444095,
+        "narHash": "sha256-pqiXr6pJE/YjPybseewVeOKfgFb1Y9+0C3XoZ31tknE=",
         "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "7d69afd4dfcb8bff51902dc7e6df0f4308133d5c",
+        "rev": "fc95607d37754624a18dd2d6a244d0981357f133",
         "type": "github"
       },
       "original": {
