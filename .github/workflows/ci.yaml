@@ -1,0 +1,47 @@
+name: CI
+on: push
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          channel: stable
+      - name: Download dependencies
+        run: |
+          flutter pub get
+      - name: Test
+        run: flutter test
+      - name: Build
+        run: flutter build web --release
+      - if: ${{ github.event_name == 'push' }}
+        name: Commit
+        run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          rm pubspec.lock
+          git checkout gh-pages
+          rm -rf .dart_tool assets canvaskit icons libtokyo
+          mv build/web/* .
+          rm -rf build
+          ln -sf index.html 404.html
+          git add .
+          git commit -a -m "Deploy ${{ github.sha }}"
+          git pull --rebase
+      - if: ${{ github.event_name == 'push' }}
+        name: Commit
+        uses: ad-m/github-push-action@master
+        with:
+          branch: gh-pages
