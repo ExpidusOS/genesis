@@ -185,8 +185,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/gokai"
-      ref: d1076fcfcd27467e2d75f78ca46b89a99230f4f3
-      resolved-ref: d1076fcfcd27467e2d75f78ca46b89a99230f4f3
+      ref: "7df0426ece67abe9738eef56475a223bc1411196"
+      resolved-ref: "7df0426ece67abe9738eef56475a223bc1411196"
       url: "https://github.com/ExpidusOS/gokai.git"
     source: git
     version: "0.0.1"
@@ -210,8 +210,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/libtokyo"
-      ref: "49f377e207802f1a39737ec1331fd1949cd4b5b9"
-      resolved-ref: "49f377e207802f1a39737ec1331fd1949cd4b5b9"
+      ref: eb140908dd2435afdf6208cb84bd37db840b46df
+      resolved-ref: eb140908dd2435afdf6208cb84bd37db840b46df
       url: "https://github.com/ExpidusOS/libtokyo.git"
     source: git
     version: "0.1.0"
@@ -219,8 +219,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/libtokyo_flutter"
-      ref: "49f377e207802f1a39737ec1331fd1949cd4b5b9"
-      resolved-ref: "49f377e207802f1a39737ec1331fd1949cd4b5b9"
+      ref: eb140908dd2435afdf6208cb84bd37db840b46df
+      resolved-ref: eb140908dd2435afdf6208cb84bd37db840b46df
       url: "https://github.com/ExpidusOS/libtokyo.git"
     source: git
     version: "0.1.0"
@@ -582,5 +582,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.5 <4.0.0"
+  dart: ">=3.0.0 <4.0.0"
   flutter: ">=3.10.0"

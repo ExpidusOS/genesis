@@ -12,21 +12,28 @@ import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:provider/provider.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
 
-void main(List<String> args) {
+Future<void> main(List<String> args) async {
   final parser = ArgParser();
   parser.addFlag('login', defaultsTo: false);
 
   final results = parser.parse(args);
-  runApp(GenesisShell(login: results['login']));
+
+  final context = await GokaiContext().init();
+  runApp(GenesisShell(
+    login: results['login'],
+    context: context,
+  ));
 }
 
 class GenesisShell extends StatefulWidget {
   const GenesisShell({
     super.key,
     this.login = false,
+    required this.context,
   });
 
   final bool login;
+  final GokaiContext context;
 
   @override
   State<GenesisShell> createState() => _GenesisShellState();
@@ -78,30 +85,22 @@ class _GenesisShellState extends State<GenesisShell> {
 
   @override
   Widget build(BuildContext context) =>
-    FutureBuilder(
-      future: GokaiContext().init(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(create: (context) => WindowViewModel(snapshot.data!)),
-              ChangeNotifierProvider(create: (context) => BatteryModel(snapshot.data!)),
-              Provider(create: (context) => snapshot.data!),
-            ],
-            child: TokyoApp(
-              title: 'Genesis Shell',
-              themeMode: ThemeMode.dark,
-              colorScheme: ColorScheme.night,
-              colorSchemeDark: ColorScheme.night,
-              initialRoute: widget.login ? '/' : '/desktop',
-              routes: {
-                '/': (ctx) => const GenesisShellLogIn(),
-                '/desktop': (ctx) => const GenesisShellDesktop(),
-              },
-            ),
-          );
-        }
-        return const SizedBox();
-      },
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => WindowViewModel(widget.context)),
+        ChangeNotifierProvider(create: (context) => BatteryModel(widget.context)),
+        Provider(create: (context) => widget.context),
+      ],
+      child: TokyoApp(
+        title: 'Genesis Shell',
+        themeMode: ThemeMode.dark,
+        colorScheme: ColorScheme.night,
+        colorSchemeDark: ColorScheme.night,
+        initialRoute: widget.login ? '/' : '/desktop',
+        routes: {
+          '/': (ctx) => const GenesisShellLogIn(),
+          '/desktop': (ctx) => const GenesisShellDesktop(),
+        },
+      ),
     );
 }
