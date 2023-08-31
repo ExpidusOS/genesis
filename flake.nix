@@ -34,20 +34,6 @@
             gokai-debug = gokai.packages.${system}.sdk-debug;
           })
         ];
-
-        flutter-engine = if pkgs.targetPlatform.isAarch64
-          then pkgs.runCommand "flutter-engine" {
-            src = pkgs.fetchzip {
-              url = "https://github.com/ardera/flutter-ci/releases/download/engine%2Fcdbeda788a293fa29665dc3fa3d6e63bd221cb0d/aarch64-generic.tar.xz";
-            };
-          } ''
-            mkdir -p $out/src/out/host_debug
-          ''
-          else pkgs.runCommand pkgs.flutter-engine.name {} ''
-            mkdir -p $out/src
-            find ${pkgs.flutter-engine.src}/src -maxdepth 1 -mindepth 1 -exec ln -sf {} $out/src \;
-            ln -s ${pkgs.flutter-engine}/out $out/src/out
-          '';
       in {
         packages.default = pkgs.flutter.buildFlutterApplication {
           pname = "genesis-shell";
@@ -59,8 +45,8 @@
           vendorHash = "sha256-m0xXpZ8entFSvy5UUP4BqtKQVsxEID5F/vHOikTuKI8=";
 
           flutterBuildFlags = [
-            "--local-engine=${flutter-engine}/src/out/host_release"
-            "--local-engine-src-path=${flutter-engine}/src"
+            "--local-engine=${pkgs.gokai.flutter-engine}/out/host_release"
+            "--local-engine-src-path=${pkgs.gokai.flutter-engine}"
           ];
 
           nativeBuildInputs = with pkgs; [
@@ -93,7 +79,7 @@
 
           LIBGL_DRIVERS_PATH = "${pkgs.mesa.drivers}/lib/dri";
           VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
-          FLUTTER_ENGINE = "${flutter-engine}/src";
+          FLUTTER_ENGINE = pkgs.gokai.flutter-engine;
         };
       });
 }
