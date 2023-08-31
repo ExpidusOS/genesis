@@ -35,11 +35,19 @@
           })
         ];
 
-        flutter-engine = pkgs.runCommand pkgs.flutter-engine.name {} ''
-          mkdir -p $out/src
-          find ${pkgs.flutter-engine.src}/src -maxdepth 1 -mindepth 1 -exec ln -sf {} $out/src \;
-          ln -s ${pkgs.flutter-engine}/out $out/src/out
-        '';
+        flutter-engine = if pkgs.targetPlatform.isAarch64
+          then pkgs.runCommand "flutter-engine" {
+            src = pkgs.fetchzip {
+              url = "https://github.com/ardera/flutter-ci/releases/download/engine%2Fcdbeda788a293fa29665dc3fa3d6e63bd221cb0d/aarch64-generic.tar.xz";
+            };
+          } ''
+            mkdir -p $out/src/out/host_debug
+          ''
+          else pkgs.runCommand pkgs.flutter-engine.name {} ''
+            mkdir -p $out/src
+            find ${pkgs.flutter-engine.src}/src -maxdepth 1 -mindepth 1 -exec ln -sf {} $out/src \;
+            ln -s ${pkgs.flutter-engine}/out $out/src/out
+          '';
       in {
         packages.default = pkgs.flutter.buildFlutterApplication {
           pname = "genesis-shell";
