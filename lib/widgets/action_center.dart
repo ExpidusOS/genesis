@@ -24,7 +24,7 @@ class ActionCenter extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Drawer(
-        width: 600,
+        width: 400,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
@@ -39,11 +39,11 @@ class ActionCenter extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     DigitalClock(
-                      style: Theme.of(context).textTheme.displayMedium,
+                      style: Theme.of(context).textTheme.displaySmall,
                       format: DateFormat.yMMMd(),
                     ),
                     DigitalClock(
-                      style: Theme.of(context).textTheme.displayMedium,
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                   ],
                 ),
@@ -59,15 +59,15 @@ class ActionCenter extends StatelessWidget {
                             ? const Icon(Icons.user, size: 75)
                             : Image.file(
                             File(userAccount!.picture!),
-                            width: 75,
-                            height: 75,
+                            width: 40,
+                            height: 40,
                             frameBuilder: (context, child, frame, wasAsync) =>
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(64.0),
                                   child: child,
                                 ),
                             errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.user, size: 75);
+                              return const Icon(Icons.user, size: 40);
                             }
                         ),
                       ),
@@ -75,7 +75,7 @@ class ActionCenter extends StatelessWidget {
                         padding: const EdgeInsets.all(3.0),
                         child: Text(
                           userAccount!.displayName,
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                       )
                     ],
@@ -113,7 +113,7 @@ class ActionCenter extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     OutlinedButton(
-                      child: const Icon(Icons.powerOff, size: 64),
+                      child: const Icon(Icons.powerOff, size: 24),
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.errorContainer,
                         foregroundColor: coloredTextTheme.labelMedium!.color,
@@ -121,7 +121,7 @@ class ActionCenter extends StatelessWidget {
                       onPressed: () {}
                     ),
                     OutlinedButton(
-                      child: const Icon(Icons.refresh, size: 64),
+                      child: const Icon(Icons.refresh, size: 24),
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
                         foregroundColor: coloredTextTheme.labelMedium!.color,
@@ -131,7 +131,16 @@ class ActionCenter extends StatelessWidget {
                     ...(userAccount != null
                       ? [
                           OutlinedButton(
-                            child: const Icon(Icons.xmark, size: 64), // TODO: use a proper logout logo when that exists
+                            child: const Icon(Icons.xmark, size: 24), // TODO: use a proper logout logo when that exists
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                              foregroundColor: coloredTextTheme.labelMedium!.color,
+                            ),
+                            onPressed: () =>
+                              Navigator.popUntil(context, ModalRoute.withName('/')),
+                          ),
+                          OutlinedButton(
+                            child: const Icon(Icons.lock, size: 24),
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                               foregroundColor: coloredTextTheme.labelMedium!.color,
@@ -139,15 +148,7 @@ class ActionCenter extends StatelessWidget {
                             onPressed: () {}
                           ),
                           OutlinedButton(
-                            child: const Icon(Icons.lock, size: 64),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                              foregroundColor: coloredTextTheme.labelMedium!.color,
-                            ),
-                            onPressed: () {}
-                          ),
-                          OutlinedButton(
-                            child: const Icon(Icons.gears, size: 64),
+                            child: const Icon(Icons.gears, size: 24),
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                               foregroundColor: coloredTextTheme.labelMedium!.color,
