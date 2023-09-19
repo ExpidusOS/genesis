@@ -42,7 +42,7 @@
           src = cleanSource self;
 
           depsListFile = ./deps.json;
-          vendorHash = "sha256-m0xXpZ8entFSvy5UUP4BqtKQVsxEID5F/vHOikTuKI8=";
+          vendorHash = "sha256-MFiWD7KGrjMga4SxGUNmUIh986xtXM1QjGRK83ENgmI=";
 
           flutterBuildFlags = [
             "--local-engine=${pkgs.gokai.flutter-engine}/out/host_release"

@@ -52,18 +52,12 @@ class _BatteryIndicatorState extends State<BatteryIndicator> {
   }
 
   Widget _buildIcon(BuildContext context) {
-    IconData icon = Icons.battery_unknown;
-    if (_isCharging) icon = Icons.battery_charging_full;
-    else {
-      if (_level == 1.0) icon = Icons.battery_full;
-      else if (_level <= 98) icon = Icons.battery_6_bar;
-      else if (_level <= 84) icon = Icons.battery_5_bar;
-      else if (_level <= 70) icon = Icons.battery_4_bar;
-      else if (_level <= 56) icon = Icons.battery_3_bar;
-      else if (_level <= 42) icon = Icons.battery_2_bar;
-      else if (_level <= 28) icon = Icons.battery_1_bar;
-      else if (_level <= 14) icon = Icons.battery_0_bar;
-    }
+    IconData icon = Icons.batteryEmpty;
+    if (_level == 1.0) icon = Icons.batteryFull;
+    else if (_level <= 75) icon = Icons.batteryThreeQuarters;
+    else if (_level <= 50) icon = Icons.batteryHalf;
+    else if (_level <= 25) icon = Icons.batteryQuarter;
+    else icon = Icons.batteryEmpty;
     return Icon(icon);
   }
 

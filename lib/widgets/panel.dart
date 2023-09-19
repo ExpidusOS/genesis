@@ -26,7 +26,7 @@ class GenesisShellPanel extends StatelessWidget implements PreferredSizeWidget {
         ),
         automaticallyImplyLeading: showLeading,
         leading: showLeading ? start ?? IconButton(
-          icon: const Icon(Icons.apps),
+          icon: const Icon(Icons.boxes), // TODO: use an apps icon when that exists.
           onPressed: () => showDialog(
             context: context,
             builder: (context) => const AppLauncher(),

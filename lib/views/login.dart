@@ -114,13 +114,13 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                             child: Column(
                                               children: [
                                                 account.picture == null
-                                                  ? const Icon(Icons.account_circle, size: 150)
+                                                  ? const Icon(Icons.user, size: 150)
                                                   : Image.file(
                                                       File(account.picture!),
                                                       width: 150,
                                                       height: 150,
                                                       errorBuilder: (context, error, stackTrace) {
-                                                        return const Icon(Icons.account_circle, size: 150);
+                                                        return const Icon(Icons.user, size: 150);
                                                       }
                                                     ),
                                                 Text(account.displayName),
@@ -172,7 +172,7 @@ class _GenesisShellLogInState extends State<GenesisShellLogIn> {
                                 ),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.arrow_circle_right),
+                                icon: const Icon(Icons.chevronRight),
                                 iconSize: 60,
                                 // TODO: use Gokai to figure out a way to determine what DE to start.
                                 onPressed: () => Navigator.pushReplacementNamed(context, '/desktop'),

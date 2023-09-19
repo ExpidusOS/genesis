@@ -56,7 +56,7 @@ class ActionCenter extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: userAccount!.picture == null
-                            ? const Icon(Icons.account_circle, size: 75)
+                            ? const Icon(Icons.user, size: 75)
                             : Image.file(
                             File(userAccount!.picture!),
                             width: 75,
@@ -67,7 +67,7 @@ class ActionCenter extends StatelessWidget {
                                   child: child,
                                 ),
                             errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.account_circle, size: 75);
+                              return const Icon(Icons.user, size: 75);
                             }
                         ),
                       ),
@@ -113,7 +113,7 @@ class ActionCenter extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     OutlinedButton(
-                      child: const Icon(Icons.power_off, size: 64),
+                      child: const Icon(Icons.powerOff, size: 64),
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.errorContainer,
                         foregroundColor: coloredTextTheme.labelMedium!.color,
@@ -121,7 +121,7 @@ class ActionCenter extends StatelessWidget {
                       onPressed: () {}
                     ),
                     OutlinedButton(
-                      child: const Icon(Icons.restart_alt, size: 64),
+                      child: const Icon(Icons.refresh, size: 64),
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
                         foregroundColor: coloredTextTheme.labelMedium!.color,
@@ -131,7 +131,7 @@ class ActionCenter extends StatelessWidget {
                     ...(userAccount != null
                       ? [
                           OutlinedButton(
-                            child: const Icon(Icons.logout, size: 64),
+                            child: const Icon(Icons.xmark, size: 64), // TODO: use a proper logout logo when that exists
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                               foregroundColor: coloredTextTheme.labelMedium!.color,
@@ -147,7 +147,7 @@ class ActionCenter extends StatelessWidget {
                             onPressed: () {}
                           ),
                           OutlinedButton(
-                            child: const Icon(Icons.settings, size: 64),
+                            child: const Icon(Icons.gears, size: 64),
                             style: OutlinedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                               foregroundColor: coloredTextTheme.labelMedium!.color,

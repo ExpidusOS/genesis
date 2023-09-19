@@ -202,7 +202,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                                                 },
                                                 child: WindowBar(
                                                   useBitsdojo: false,
-                                                  leading: const Icon(Icons.window),
+                                                  leading: const Icon(Icons.windows), // TODO: use the "window" icon when that is available.
                                                   title: Text(win.title ?? 'Untitled Window'),
                                                   onMaximize: () {},
                                                   onMinimize: () {},

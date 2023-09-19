@@ -12,17 +12,17 @@ dependencies:
   libtokyo:
     git:
       url: https://github.com/ExpidusOS/libtokyo.git
-      ref: eb140908dd2435afdf6208cb84bd37db840b46df
+      ref: bc5d988f32b67a9f91ff34248f69c45cfb4efcca
       path: packages/libtokyo
   libtokyo_flutter:
     git:
       url: https://github.com/ExpidusOS/libtokyo.git
-      ref: eb140908dd2435afdf6208cb84bd37db840b46df
+      ref: bc5d988f32b67a9f91ff34248f69c45cfb4efcca
       path: packages/libtokyo_flutter
   gokai:
     git:
       url: https://github.com/ExpidusOS/gokai.git
-      ref: 13280ad637cd23f9f5245ef81e602e200a1cc176
+      ref: 99aa223e963f58ae787d4c7f8d0b821edc2429a6
       path: packages/gokai
   intl: ^0.18.0
   args: ^2.4.2
@@ -32,10 +32,11 @@ dependencies:
   provider: ^6.0.5
 
 dependency_overrides:
+  file: ^7.0.0
   libtokyo:
     git:
       url: https://github.com/ExpidusOS/libtokyo.git
-      ref: eb140908dd2435afdf6208cb84bd37db840b46df
+      ref: bc5d988f32b67a9f91ff34248f69c45cfb4efcca
       path: packages/libtokyo
 
 dev_dependencies:

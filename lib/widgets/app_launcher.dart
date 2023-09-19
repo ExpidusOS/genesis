@@ -54,7 +54,7 @@ class AppLauncher extends StatelessWidget {
                                   child: Scaffold(
                                     windowBar: WindowBar(
                                       useBitsdojo: false,
-                                      leading: const Icon(Icons.window),
+                                      leading: const Icon(Icons.windows),
                                       title: Text(win.title ?? 'Untitled Window'),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
