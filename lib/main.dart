@@ -18,6 +18,8 @@ Future<void> main(List<String> args) async {
 
   final results = parser.parse(args);
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   final context = await GokaiContext().init();
   runApp(GenesisShell(
     login: results['login'],
