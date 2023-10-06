@@ -72,6 +72,11 @@ class _BatteryIndicatorState extends State<BatteryIndicator> {
       children: [
         if (widget.withIcon) _buildIcon(context),
         if (widget.withLabel) _buildLabel(context),
-      ],
+      ].map((child) =>
+        Padding(
+          padding: const EdgeInsets.all(3),
+          child: child,
+        )
+      ).toList(),
     );
 }

@@ -72,7 +72,7 @@ class ActionCenter extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(3.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Text(
                           userAccount!.displayName,
                           style: Theme.of(context).textTheme.displaySmall,
@@ -89,7 +89,7 @@ class ActionCenter extends StatelessWidget {
                     children: model.items.where((device) => !device.isIntegrated ? device.name.isNotEmpty : true).map(
                       (device) => ListTile(
                         leading: SizedBox.square(
-                          dimension: 30,
+                          dimension: 35,
                           child: BatteryIndicator(
                             device: device,
                             withLabel: false,
