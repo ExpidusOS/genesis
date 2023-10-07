@@ -60,6 +60,17 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
   final Map<String, Rect> _windowRects = {};
 
+  Future<GokaiUserAccount> _getAccount(BuildContext context) async {
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      final args = route!.settings.arguments as Map<String, dynamic>?;
+      if (args != null) {
+        if (args!['account'] != null) return args!['account'] as GokaiUserAccount;
+      }
+    }
+    return (Provider.of<GokaiContext>(context).services['AccountManager'] as GokaiAccountManager).getCurrent();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Shortcuts.manager(
@@ -101,7 +112,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                 backgroundColor: Colors.transparent,
                 appBar: const GenesisShellPanel(),
                 endDrawer: FutureBuilder(
-                  future: (Provider.of<GokaiContext>(context).services['AccountManager'] as GokaiAccountManager).getCurrent(),
+                  future: _getAccount(context),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ActionCenter(userAccount: snapshot.data!);
