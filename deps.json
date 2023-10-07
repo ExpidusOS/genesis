@@ -15,34 +15,12 @@
       "xdg_directories",
       "flutter_adaptive_scaffold",
       "provider",
+      "shared_preferences_platform_interface",
+      "file",
+      "path",
       "flutter_test",
-      "flutter_lints",
-      "file"
+      "flutter_lints"
     ]
-  },
-  {
-    "name": "file",
-    "version": "7.0.0",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "meta",
-      "path"
-    ]
-  },
-  {
-    "name": "path",
-    "version": "1.8.3",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": []
-  },
-  {
-    "name": "meta",
-    "version": "1.9.1",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": []
   },
   {
     "name": "flutter_lints",
@@ -122,6 +100,13 @@
     ]
   },
   {
+    "name": "path",
+    "version": "1.8.3",
+    "kind": "direct",
+    "source": "hosted",
+    "dependencies": []
+  },
+  {
     "name": "collection",
     "version": "1.17.2",
     "kind": "transitive",
@@ -146,6 +131,13 @@
       "collection",
       "meta"
     ]
+  },
+  {
+    "name": "meta",
+    "version": "1.9.1",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": []
   },
   {
     "name": "material_color_utilities",
@@ -257,6 +249,35 @@
     "kind": "transitive",
     "source": "sdk",
     "dependencies": []
+  },
+  {
+    "name": "file",
+    "version": "7.0.0",
+    "kind": "direct",
+    "source": "hosted",
+    "dependencies": [
+      "meta",
+      "path"
+    ]
+  },
+  {
+    "name": "shared_preferences_platform_interface",
+    "version": "2.3.1",
+    "kind": "direct",
+    "source": "hosted",
+    "dependencies": [
+      "flutter",
+      "plugin_platform_interface"
+    ]
+  },
+  {
+    "name": "plugin_platform_interface",
+    "version": "2.1.4",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "meta"
+    ]
   },
   {
     "name": "provider",
@@ -377,15 +398,6 @@
     "source": "hosted",
     "dependencies": [
       "flutter"
-    ]
-  },
-  {
-    "name": "plugin_platform_interface",
-    "version": "2.1.4",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "meta"
     ]
   },
   {
@@ -746,16 +758,6 @@
       "path_provider_platform_interface",
       "path_provider_windows",
       "shared_preferences_platform_interface"
-    ]
-  },
-  {
-    "name": "shared_preferences_platform_interface",
-    "version": "2.3.0",
-    "kind": "transitive",
-    "source": "hosted",
-    "dependencies": [
-      "flutter",
-      "plugin_platform_interface"
     ]
   },
   {

@@ -30,6 +30,9 @@ dependencies:
   xdg_directories: ^1.0.0
   flutter_adaptive_scaffold: ^0.1.6
   provider: ^6.0.5
+  shared_preferences_platform_interface: ^2.3.1
+  file: ^7.0.0
+  path: ^1.8.3
 
 dependency_overrides:
   file: ^7.0.0
