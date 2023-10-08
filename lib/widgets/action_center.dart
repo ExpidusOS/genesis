@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:libtokyo_flutter/libtokyo.dart';
 import 'package:genesis_shell/models.dart';
 import 'package:gokai/user/account.dart';
@@ -21,10 +23,12 @@ class ActionCenter extends StatelessWidget {
     final coloredTextTheme = Theme.of(context).colorScheme.brightness == Brightness.dark
       ? Theme.of(context).typography.white
       : Theme.of(context).typography.black;
+
+    final displaySize = MediaQuery.sizeOf(context);
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Drawer(
-        width: 400,
+        width: min(max(displaySize.width - 20, 410), displaySize.width / 3),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
@@ -45,6 +49,11 @@ class ActionCenter extends StatelessWidget {
                     DigitalClock(
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
+                    IconButton(
+                      icon: Icon(Breakpoints.small.isActive(context) ? Icons.xmark : Icons.angleRight),
+                      onPressed: () =>
+                        Navigator.pop(context),
+                    ),
                   ],
                 ),
               ),
@@ -56,7 +65,7 @@ class ActionCenter extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: userAccount!.picture == null
-                            ? const Icon(Icons.user, size: 75)
+                            ? const Icon(Icons.user, size: 40)
                             : Image.file(
                             File(userAccount!.picture!),
                             width: 40,
