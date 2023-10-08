@@ -27,12 +27,13 @@ class ActionCenter extends StatelessWidget {
 
     final displaySize = MediaQuery.sizeOf(context);
     final activeBreakpoint = findActiveBreakpoint(context) as WidthPlatformBreakpoint;
-    final shouldFill = !Breakpoints.large.isActive(context);
-    final width = activeBreakpoint.begin ?? displaySize.width / 3;
+    final calcWidth = activeBreakpoint.begin ?? displaySize.width / 3;
+    final width = Breakpoints.small.isActive(context) && calcWidth > 0 ? calcWidth : 410.0;
+    final shouldFill = width > displaySize.width / 2;
     return Padding(
       padding: EdgeInsets.all(shouldFill ? 5.0 : 16.0),
       child: Drawer(
-        width: Breakpoints.small.isActive(context) && width > 0 ? width : 410,
+        width: width,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
