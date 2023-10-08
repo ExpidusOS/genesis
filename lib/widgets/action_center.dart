@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:libtokyo_flutter/libtokyo.dart';
 import 'package:genesis_shell/models.dart';
+import 'package:genesis_shell/logic.dart';
 import 'package:gokai/user/account.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -25,10 +26,13 @@ class ActionCenter extends StatelessWidget {
       : Theme.of(context).typography.black;
 
     final displaySize = MediaQuery.sizeOf(context);
+    final activeBreakpoint = findActiveBreakpoint(context) as WidthPlatformBreakpoint;
+    final shouldFill = !Breakpoints.large.isActive(context);
+    final width = activeBreakpoint.begin ?? displaySize.width / 3;
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(shouldFill ? 5.0 : 16.0),
       child: Drawer(
-        width: min(max(displaySize.width - 20, 410), displaySize.width / 3),
+        width: Breakpoints.small.isActive(context) && width > 0 ? width : 410,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(32),
         ),
@@ -43,14 +47,15 @@ class ActionCenter extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     DigitalClock(
-                      style: Theme.of(context).textTheme.displaySmall,
+                      style: Theme.of(context).textTheme.headlineLarge,
                       format: DateFormat.yMMMd(),
                     ),
                     DigitalClock(
-                      style: Theme.of(context).textTheme.displaySmall,
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     IconButton(
-                      icon: Icon(Breakpoints.small.isActive(context) ? Icons.xmark : Icons.angleRight),
+                      iconSize: 36,
+                      icon: Icon(shouldFill ? Icons.angleRight : Icons.xmark),
                       onPressed: () =>
                         Navigator.pop(context),
                     ),
