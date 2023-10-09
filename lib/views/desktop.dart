@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'dart:math' as math;
 import 'package:genesis_shell/models.dart';
 import 'package:gokai/widgets.dart';
@@ -5,13 +6,21 @@ import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:path/path.dart' as path;
+import 'package:file/file.dart';
+import 'package:file/local.dart';
+import 'package:genesis_shell/compat.dart';
 import 'package:genesis_shell/gestures.dart';
+import 'package:genesis_shell/logic.dart';
 import 'package:genesis_shell/widgets.dart';
 import 'package:gokai/user/account.dart';
 import 'package:gokai/view/window.dart';
 import 'package:gokai/gokai.dart';
 import 'package:gokai/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GenesisShellDesktop extends StatefulWidget {
   const GenesisShellDesktop({super.key});
@@ -58,9 +67,12 @@ class _DesktopShortcutsManager extends ShortcutManager {
 
 class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
+  final _fs = const LocalFileSystem();
   final Map<String, Rect> _windowRects = {};
+  SharedPreferencesStorePlatform? _prevSharedPreferences;
+  SharedPreferences? _prefs;
 
-  Future<GokaiUserAccount> _getAccount(BuildContext context) async {
+  Future<GokaiUserAccount> _getAccount(BuildContext context, { bool listen = true }) async {
     final route = ModalRoute.of(context);
     if (route != null) {
       final args = route!.settings.arguments as Map<String, dynamic>?;
@@ -68,7 +80,47 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
         if (args!['account'] != null) return args!['account'] as GokaiUserAccount;
       }
     }
-    return (Provider.of<GokaiContext>(context).services['AccountManager'] as GokaiAccountManager).getCurrent();
+    return (Provider.of<GokaiContext>(context, listen: listen).services['AccountManager'] as GokaiAccountManager).getCurrent();
+  }
+
+  Future<SharedPreferences> _getPrefs(BuildContext context, { bool listen = true }) async {
+    final account = await _getAccount(context, listen: listen);
+    _prevSharedPreferences = SharedPreferencesStorePlatform.instance;
+
+    if (account.home != null) {
+      SharedPreferencesStorePlatform.instance = SharedPreferencesGokai(
+        file: _fs.file(path.join(account.home!, '.config', 'genesis-shell', 'shared_preferences.json')),
+      );
+    }
+    return await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _getPrefs(_scaffold.currentContext!, listen: false).then((prefs) => setState(() {
+        _prefs = prefs;
+      }));
+    });
+  }
+
+  @override
+  void dispose() {
+    if (_prevSharedPreferences != null) {
+      SharedPreferencesStorePlatform.instance = _prevSharedPreferences!;
+    }
+
+    super.dispose();
+  }
+
+  ImageProvider _buildWallpaper() {
+    if (_prefs == null) return AssetImage('assets/wallpaper/desktop/default.jpg');
+
+    final p = GenesisShellSettings.wallpaper.valueFor(_prefs!);
+    if (p == null) return AssetImage('assets/wallpaper/desktop/default.jpg');
+    return FileImage(io.File(p));
   }
 
   @override
@@ -100,9 +152,9 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
           child: Stack(
             children: [
               Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/wallpaper/desktop/default.jpg'),
+                    image: _buildWallpaper(),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -110,7 +162,10 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
               material.Scaffold(
                 key: _scaffold,
                 backgroundColor: Colors.transparent,
-                appBar: const GenesisShellPanel(),
+                appBar: GenesisShellPanel(
+                  transparency: _prefs == null ? null : GenesisShellSettings.panelTransparency.valueFor(_prefs!),
+                  style: _prefs == null ? GenesisShellPanelStyle.pill : GenesisShellPanelStyle.values.asNameMap()[_prefs!.getString(GenesisShellSettings.panelStyle.name) ?? 'pill'] ?? GenesisShellPanelStyle.pill,
+                ),
                 endDrawer: FutureBuilder(
                   future: _getAccount(context),
                   builder: (context, snapshot) {

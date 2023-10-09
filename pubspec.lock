@@ -201,8 +201,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/gokai"
-      ref: "99aa223e963f58ae787d4c7f8d0b821edc2429a6"
-      resolved-ref: "99aa223e963f58ae787d4c7f8d0b821edc2429a6"
+      ref: "27227fcccd5c3186f8dc47321cecab9ed1026dfc"
+      resolved-ref: "27227fcccd5c3186f8dc47321cecab9ed1026dfc"
       url: "https://github.com/ExpidusOS/gokai.git"
     source: git
     version: "0.0.1"

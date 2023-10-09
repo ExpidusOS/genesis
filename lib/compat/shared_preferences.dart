@@ -16,10 +16,6 @@ class SharedPreferencesGokai extends SharedPreferencesStorePlatform {
   final File file;
   Map<String, Object>? _cachedPreferences;
 
-  static void registerWith({ required GokaiContext context }) {
-    SharedPreferencesStorePlatform.instance = SharedPreferencesGokai(context: context);
-  }
-
   Future<File?> _getLocalDataFile() async => file;
 
   Future<Map<String, Object>> _reload() async {
