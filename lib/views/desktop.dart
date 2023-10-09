@@ -2,7 +2,7 @@ import 'dart:io' as io;
 import 'dart:math' as math;
 import 'package:genesis_shell/models.dart';
 import 'package:gokai/widgets.dart';
-import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
+import 'package:libtokyo_flutter/libtokyo.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
@@ -69,6 +69,7 @@ class _DesktopShortcutsManager extends ShortcutManager {
 }
 
 class GenesisShellDesktopState extends State<GenesisShellDesktop> {
+  final _selfKey = GlobalKey();
   final _scaffold = GlobalKey<material.ScaffoldState>();
   final _fs = const LocalFileSystem();
   final Map<String, Rect> _windowRects = {};
@@ -112,7 +113,7 @@ class GenesisShellDesktopState extends State<GenesisShellDesktop> {
     super.initState();
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _getPrefs(_scaffold.currentContext!, listen: false).then((prefs) => setState(() {
+      _getPrefs(_selfKey.currentContext!, listen: false).then((prefs) => setState(() {
         _prefs = prefs;
       }));
     });
@@ -136,9 +137,25 @@ class GenesisShellDesktopState extends State<GenesisShellDesktop> {
     return FileImage(io.File(p));
   }
 
+  Future<material.ThemeData> _loadTheme(BuildContext context) async {
+    final colorScheme = _prefs != null ? ColorScheme.values.asNameMap()[_prefs!.getString(GenesisShellSettings.colorScheme.name) ?? 'night']! : ColorScheme.night;
+    final data = await rootBundle.loadString('packages/libtokyo/data/themes/${colorScheme.name}.json');
+    final loaded = ThemeData.json(
+      package: 'libtokyo',
+      colorScheme: colorScheme,
+      json: data,
+    );
+    return convertThemeData(
+      context: context,
+      source: loaded,
+      brightness: colorScheme == ColorScheme.day ? Brightness.light : Brightness.dark,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Shortcuts.manager(
+      key: _selfKey,
       manager: _DesktopShortcutsManager(
         shortcuts: {
           CharacterActivator('a', meta: true): _ActionCenterIntent(),
@@ -160,162 +177,178 @@ class GenesisShellDesktopState extends State<GenesisShellDesktop> {
               : _scaffold.currentState!.openEndDrawer()
           ),
         },
-        child: Focus(
-          key: _key,
-          autofocus: true,
-          child: Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: _buildWallpaper(),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              material.Scaffold(
-                key: _scaffold,
-                backgroundColor: Colors.transparent,
-                appBar: GenesisShellPanel(
-                  transparency: _prefs == null ? null : GenesisShellSettings.panelTransparency.valueFor(_prefs!),
-                  style: _prefs == null ? GenesisShellPanelStyle.pill : GenesisShellPanelStyle.values.asNameMap()[_prefs!.getString(GenesisShellSettings.panelStyle.name) ?? 'pill'] ?? GenesisShellPanelStyle.pill,
-                ),
-                endDrawer: FutureBuilder(
-                  future: _getAccount(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ActionCenter(
-                        userAccount: snapshot.data!,
-                        prefs: _prefs,
-                        reload: () => reload(),
-                      );
-                    }
+        child: FutureBuilder(
+          future: _loadTheme(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error!);
+            }
 
-                    if (snapshot.hasError) {
-                      print(snapshot.error!);
-                    }
-                    return const ActionCenter(userAccount: null);
-                  }
-                ),
-                body: AdaptiveLayout(
-                  body: SlotLayout(
-                    config: {
-                      Breakpoints.smallAndUp: SlotLayout.from(
-                        key: const Key('smallBody'),
-                        builder: (context) =>
-                          Consumer<WindowViewModel>(
-                            builder: (context, model, child) {
-                              final displaySize = MediaQuery.sizeOf(context);
-                              final rect = Rect.fromLTWH(0, 0, displaySize.width, displaySize.height);
-
-                              if (model.active.isEmpty) {
-                                return const SizedBox();
-                              }
-
-                              final win = model.active.first;
-
-                              if (context.mounted) {
-                                win.setRect(rect);
-                              }
-
-                              return GokaiWindowView(
-                                id: win.id,
-                                size: displaySize,
-                                windowManager: model.windowManager,
-                                inputManager: Provider.of<GokaiContext>(context).services['InputManager'] as GokaiInputManager,
-                              );
-                            }
-                          ),
+            if (snapshot.hasData) {
+              return Theme(
+                data: snapshot.data!,
+                child: Focus(
+                  key: _key,
+                  autofocus: true,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                          image: _buildWallpaper(),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      Breakpoints.large: SlotLayout.from(
-                        key: const Key('largeBody'),
-                        builder: (context) =>
-                          Consumer<WindowViewModel>(
-                            builder: (context, model, child) =>
-                              Stack(
-                                clipBehavior: Clip.none,
-                                children: model.activeFirstItems.reversed.map(
-                                  (win) => Positioned(
-                                    left: (_windowRects[win.id] ?? win.rect).left,
-                                    top: (_windowRects[win.id] ?? win.rect).top,
-                                    child: GokaiWindowView(
+                    ),
+                    material.Scaffold(
+                     key: _scaffold,
+                      backgroundColor: Colors.transparent,
+                      appBar: GenesisShellPanel(
+                        transparency: _prefs == null ? null : GenesisShellSettings.panelTransparency.valueFor(_prefs!),
+                        style: _prefs == null ? GenesisShellPanelStyle.pill : GenesisShellPanelStyle.values.asNameMap()[_prefs!.getString(GenesisShellSettings.panelStyle.name) ?? 'pill'] ?? GenesisShellPanelStyle.pill,
+                      ),
+                      endDrawer: FutureBuilder(
+                        future: _getAccount(context),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ActionCenter(
+                              userAccount: snapshot.data!,
+                              prefs: _prefs,
+                              reload: () => reload(),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            print(snapshot.error!);
+                          }
+                           return const ActionCenter(userAccount: null);
+                        }
+                      ),
+                      body: AdaptiveLayout(
+                        body: SlotLayout(
+                          config: {
+                            Breakpoints.smallAndUp: SlotLayout.from(
+                              key: const Key('smallBody'),
+                              builder: (context) =>
+                                Consumer<WindowViewModel>(
+                                  builder: (context, model, child) {
+                                    final displaySize = MediaQuery.sizeOf(context);
+                                    final rect = Rect.fromLTWH(0, 0, displaySize.width, displaySize.height);
+
+                                    if (model.active.isEmpty) {
+                                      return const SizedBox();
+                                    }
+
+                                    final win = model.active.first;
+
+                                    if (context.mounted) {
+                                     win.setRect(rect);
+                                    }
+
+                                    return GokaiWindowView(
                                       id: win.id,
-                                      size: (_windowRects[win.id] ?? win.rect).size,
+                                      size: displaySize,
                                       windowManager: model.windowManager,
                                       inputManager: Provider.of<GokaiContext>(context).services['InputManager'] as GokaiInputManager,
-                                      decorationBuilder: (context, child, win) => SizedBox(
-                                        width: win.rect.width,
-                                        height: win.rect.height + kWindowBarHeight,
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20.0),
-                                          ),
-                                          child: Scaffold(
-                                            windowBar: PreferredSize(
-                                              preferredSize: Size(
-                                                MediaQuery.sizeOf(context).width,
-                                                WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
-                                              ),
-                                              child: RawGestureDetector(
-                                                gestures: {
-                                                  AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
-                                                    () => AllowMultipleVerticalDragGestureRecognizer(),
-                                                    (instance) {
-                                                      instance.onUpdate = (details) {
-                                                        final displaySize = MediaQuery.sizeOf(context);
-                                                        final pos = Offset(
-                                                          math.min(
-                                                            details.globalPosition.dx,
-                                                            displaySize.width,
-                                                          ),
-                                                          math.min(
-                                                            details.globalPosition.dy,
-                                                            displaySize.height,
-                                                          )
-                                                        ) - const Offset(5, kToolbarHeight + 5);
-                                                        final size = (_windowRects[win.id] ?? win.rect).size;
-                                                        final rect = Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
+                                    );
+                                  }
+                                ),
+                            ),
+                            Breakpoints.large: SlotLayout.from(
+                              key: const Key('largeBody'),
+                              builder: (context) =>
+                                Consumer<WindowViewModel>(
+                                  builder: (context, model, child) =>
+                                    Stack(
+                                      clipBehavior: Clip.none,
+                                      children: model.activeFirstItems.reversed.map(
+                                        (win) => Positioned(
+                                          left: (_windowRects[win.id] ?? win.rect).left,
+                                          top: (_windowRects[win.id] ?? win.rect).top,
+                                          child: GokaiWindowView(
+                                            id: win.id,
+                                            size: (_windowRects[win.id] ?? win.rect).size,
+                                            windowManager: model.windowManager,
+                                            inputManager: Provider.of<GokaiContext>(context).services['InputManager'] as GokaiInputManager,
+                                            decorationBuilder: (context, child, win) => SizedBox(
+                                              width: win.rect.width,
+                                              height: win.rect.height + kWindowBarHeight,
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(20.0),
+                                                ),
+                                                child: Scaffold(
+                                                  windowBar: PreferredSize(
+                                                    preferredSize: Size(
+                                                      MediaQuery.sizeOf(context).width,
+                                                      WindowBar.preferredHeightFor(context, const Size.fromHeight(kWindowBarHeight)),
+                                                    ),
+                                                    child: RawGestureDetector(
+                                                      gestures: {
+                                                        AllowMultipleVerticalDragGestureRecognizer: GestureRecognizerFactoryWithHandlers<AllowMultipleVerticalDragGestureRecognizer>(
+                                                          () => AllowMultipleVerticalDragGestureRecognizer(),
+                                                          (instance) {
+                                                            instance.onUpdate = (details) {
+                                                              final displaySize = MediaQuery.sizeOf(context);
+                                                              final pos = Offset(
+                                                                math.min(
+                                                                  details.globalPosition.dx,
+                                                                  displaySize.width,
+                                                                ),
+                                                                math.min(
+                                                                  details.globalPosition.dy,
+                                                                  displaySize.height,
+                                                                )
+                                                              ) - const Offset(5, kToolbarHeight + 5);
+                                                              final size = (_windowRects[win.id] ?? win.rect).size;
+                                                              final rect = Rect.fromLTWH(pos.dx, pos.dy, size.width, size.height);
 
-                                                        win.setRect(rect);
-                                                        setState(() {
-                                                          _windowRects[win.id] = rect;
-                                                        });
-                                                      };
-                                                    }
-                                                  ),
-                                                },
-                                                child: WindowBar(
-                                                  useBitsdojo: false,
-                                                  leading: const Icon(Icons.windows), // TODO: use the "window" icon when that is available.
-                                                  title: Text(win.title ?? 'Untitled Window'),
-                                                  onMaximize: () {},
-                                                  onMinimize: () {},
-                                                  onClose: () {},
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.only(
-                                                      topLeft: Radius.circular(WindowBarTheme.of(context).borderRadius),
-                                                      topRight: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                                              win.setRect(rect);
+                                                              setState(() {
+                                                                _windowRects[win.id] = rect;
+                                                              });
+                                                            };
+                                                          }
+                                                        ),
+                                                      },
+                                                      child: WindowBar(
+                                                        useBitsdojo: false,
+                                                        leading: const Icon(Icons.windows), // TODO: use the "window" icon when that is available.
+                                                        title: Text(win.title ?? 'Untitled Window'),
+                                                        onMaximize: () {},
+                                                        onMinimize: () {},
+                                                        onClose: () {},
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.only(
+                                                            topLeft: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                                            topRight: Radius.circular(WindowBarTheme.of(context).borderRadius),
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
+                                                  body: child,
                                                 ),
                                               ),
                                             ),
-                                            body: child,
                                           ),
-                                        ),
-                                      ),
+                                        )
+                                      ).toList(),
                                     ),
-                                  )
-                                ).toList(),
+                                ),
                               ),
+                            },
                           ),
+                        ),
                       ),
-                    },
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
+              );
+            }
+
+            return const SizedBox();
+          },
         ),
       ),
     );
