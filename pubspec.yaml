@@ -33,9 +33,11 @@ dependencies:
   shared_preferences_platform_interface: ^2.3.1
   file: ^7.0.0
   path: ^1.8.3
+  package_info_plus: 4.1.0
 
 dependency_overrides:
   file: ^7.0.0
+  win32: ^5.0.7
   libtokyo:
     git:
       url: https://github.com/ExpidusOS/libtokyo.git
@@ -52,3 +54,5 @@ flutter:
   assets:
     - assets/wallpaper/desktop/
     - assets/wallpaper/mobile/
+    - pubspec.yaml
+    - .dart_tool/package_config.json

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'battery_indicator.dart';
 import 'clock.dart';
+import 'settings.dart';
 
 class ActionCenter extends StatelessWidget {
   const ActionCenter({
@@ -168,7 +169,13 @@ class ActionCenter extends StatelessWidget {
                               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                               foregroundColor: coloredTextTheme.labelMedium!.color,
                             ),
-                            onPressed: () {}
+                            onPressed: () {
+                              Navigator.pop(context);
+                              showDialog(
+                                context: context,
+                                builder: (_) => const GenesisShellSettingsDialog(),
+                              );
+                            }
                           ),
                         ]
                       : [])

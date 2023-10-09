@@ -23,7 +23,7 @@ jobs:
         run: |
           flutter pub get
       - name: Build
-        run: flutter build web --release
+        run: flutter build web --release --build-number $GITHUB_RUN_NUMBER --dart-define=COMMIT_HASH=$GITHUB_SHA
       - if: ${{ github.event_name == 'push' }}
         name: Commit
         run: |

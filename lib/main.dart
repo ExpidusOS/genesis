@@ -6,11 +6,16 @@ import 'package:genesis_shell/models.dart';
 import 'package:genesis_shell/views.dart';
 import 'package:gokai/gokai.dart';
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pubspec/pubspec.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:gokai/services/window_manager.dart';
 import 'package:libtokyo/libtokyo.dart' show ColorScheme;
 import 'package:libtokyo_flutter/libtokyo.dart' hide ColorScheme;
 import 'package:provider/provider.dart';
 import 'package:xdg_directories/xdg_directories.dart' as xdg;
+
+final kCommitHash = (const String.fromEnvironment('COMMIT_HASH', defaultValue: 'AAAAAAA')).substring(0, 7);
 
 Future<void> main(List<String> args) async {
   final parser = ArgParser();
@@ -20,10 +25,17 @@ Future<void> main(List<String> args) async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  final pinfo = await PackageInfo.fromPlatform();
+
+  final pubspec = PubSpec.fromYamlString(await rootBundle.loadString('pubspec.yaml')).copy(
+    version: Version.parse("${pinfo.version}+$kCommitHash"),
+  );
+
   final context = await GokaiContext().init();
   runApp(GenesisShell(
     login: results['login'],
     context: context,
+    pubspec: pubspec,
   ));
 }
 
@@ -32,13 +44,17 @@ class GenesisShell extends StatefulWidget {
     super.key,
     this.login = false,
     required this.context,
+    required this.pubspec,
   });
 
   final bool login;
   final GokaiContext context;
+  final PubSpec pubspec;
 
   @override
   State<GenesisShell> createState() => _GenesisShellState();
+
+  static PubSpec getPubSpec(BuildContext context) => context.findAncestorWidgetOfExactType<GenesisShell>()!.pubspec;
 }
 
 class _GenesisShellState extends State<GenesisShell> {
