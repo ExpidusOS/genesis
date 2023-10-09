@@ -1,0 +1,58 @@
+name: genesis_shell
+description: The next-generation fully featured desktop environment ExpidusOS.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  libtokyo:
+    git:
+      url: https://github.com/ExpidusOS/libtokyo.git
+      ref: bc5d988f32b67a9f91ff34248f69c45cfb4efcca
+      path: packages/libtokyo
+  libtokyo_flutter:
+    git:
+      url: https://github.com/ExpidusOS/libtokyo.git
+      ref: bc5d988f32b67a9f91ff34248f69c45cfb4efcca
+      path: packages/libtokyo_flutter
+  gokai:
+    git:
+      url: https://github.com/ExpidusOS/gokai.git
+      ref: 27227fcccd5c3186f8dc47321cecab9ed1026dfc
+      path: packages/gokai
+  intl: ^0.18.0
+  args: ^2.4.2
+  dbus: ^0.7.8
+  xdg_directories: ^1.0.0
+  flutter_adaptive_scaffold: ^0.1.6
+  provider: ^6.0.5
+  shared_preferences_platform_interface: ^2.3.1
+  file: ^7.0.0
+  path: ^1.8.3
+  package_info_plus: 4.1.0
+
+dependency_overrides:
+  file: ^7.0.0
+  win32: ^5.0.7
+  libtokyo:
+    git:
+      url: https://github.com/ExpidusOS/libtokyo.git
+      ref: bc5d988f32b67a9f91ff34248f69c45cfb4efcca
+      path: packages/libtokyo
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/wallpaper/desktop/
+    - assets/wallpaper/mobile/
+    - pubspec.yaml
+    - .dart_tool/package_config.json
