@@ -1,4 +1,5 @@
 import 'package:libtokyo_flutter/libtokyo.dart';
+import 'package:genesis_shell/logic.dart';
 import 'package:genesis_shell/widgets.dart';
 
 class GenesisShellInitialUserSetup extends StatefulWidget {
@@ -52,7 +53,7 @@ class _GenesisShellInitialUserSetupState extends State<GenesisShellInitialUserSe
                       children: [
                         Text(
                           // TODO: figure out if we're on a Linux distro and display the distro name and logo
-                          'Welcome to Genesis Shell',
+                          'Welcome to ${readOsRelease()["PRETTY_NAME"] ?? "Genesis Shell"}',
                           style: Theme.of(context).textTheme.displayLarge,
                         ),
                       ],
