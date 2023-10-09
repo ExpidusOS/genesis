@@ -92,6 +92,8 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
         file: _fs.file(path.join(account.home!, '.config', 'genesis-shell', 'shared_preferences.json')),
       );
     }
+
+    SharedPreferences.setPrefix(account.id.toString() + '.');
     return await SharedPreferences.getInstance();
   }
 
@@ -110,6 +112,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
   void dispose() {
     if (_prevSharedPreferences != null) {
       SharedPreferencesStorePlatform.instance = _prevSharedPreferences!;
+      SharedPreferences.setPrefix('flutter.');
     }
 
     super.dispose();
