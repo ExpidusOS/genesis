@@ -97,6 +97,7 @@ class GenesisShellDesktopState extends State<GenesisShellDesktop> {
   Future<SharedPreferences> _getPrefs(BuildContext context, { bool listen = true }) async {
     final account = await _getAccount(context, listen: listen);
     _prevSharedPreferences = SharedPreferencesStorePlatform.instance;
+    SharedPreferences.resetStatic();
 
     if (account.home != null) {
       SharedPreferencesStorePlatform.instance = SharedPreferencesGokai(
@@ -123,7 +124,7 @@ class GenesisShellDesktopState extends State<GenesisShellDesktop> {
   void dispose() {
     if (_prevSharedPreferences != null) {
       SharedPreferencesStorePlatform.instance = _prevSharedPreferences!;
-      SharedPreferences.setPrefix('flutter.');
+      SharedPreferences.resetStatic();
     }
 
     super.dispose();
