@@ -118,6 +118,7 @@ class _GenesisShellState extends State<GenesisShell> {
         routes: {
           '/': (ctx) => const GenesisShellLogIn(),
           '/desktop': (ctx) => const GenesisShellDesktop(),
+          '/initial-user-setup': (ctx) => const GenesisShellInitialUserSetup(),
         },
       ),
     );

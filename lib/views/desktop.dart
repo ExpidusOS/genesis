@@ -116,6 +116,15 @@ class GenesisShellDesktopState extends State<GenesisShellDesktop> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _getPrefs(_selfKey.currentContext!, listen: false).then((prefs) => setState(() {
         _prefs = prefs;
+
+        final isFirstRun = GenesisShellSettings.firstRun.valueFor(prefs);
+        if (isFirstRun) {
+          prefs.setBool(GenesisShellSettings.firstRun.name, false);
+
+          _getAccount(_selfKey.currentContext!, listen: false)
+            .then((account) => Navigator.pushNamed(context, '/initial-user-setup', arguments: { 'account': account }))
+            .catchError(print);
+        }
       }));
     });
   }

@@ -7,6 +7,7 @@ enum GenesisShellSettings<T> {
   panelTransparency<double?>(null),
   panelStyle(GenesisShellPanelStyle.pill),
   colorScheme(ColorScheme.night),
+  firstRun(true),
   optInErrorReporting(false);
 
   const GenesisShellSettings(this.defaultValue);
