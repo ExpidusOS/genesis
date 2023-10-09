@@ -150,7 +150,39 @@ class _SettingsAppearanceDialogState extends State<_SettingsAppearanceDialog> {
                     }
                   }),
               ),
+              ListTile(
+                title: const Text('Panel transparency'),
+                onTap: () =>
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                      StatefulBuilder(
+                        builder: (context, setState) =>
+                          Dialog(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Slider(
+                                value: (panelTransparency ?? 1.0) * 100,
+                                max: 100.0,
+                                label: ((panelTransparency ?? 1.0) * 100).round().toString(),
+                                onChanged: (value) =>
+                                  setState(() {
+                                    panelTransparency = value / 100;
 
+                                    widget.prefs.setDouble(
+
+                                      GenesisShellSettings.panelTransparency.name,
+                                      panelTransparency ?? 1.0
+                                    );
+
+                                    widget.reload();
+                                  }),
+                              ),
+                            ),
+                          ),
+                        ),
+                  ),
+              ),
             ],
           ),
         ),
