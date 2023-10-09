@@ -1,9 +1,41 @@
 import 'package:libtokyo_flutter/libtokyo.dart';
 import 'package:libtokyo_flutter/widgets/about_page_builder.dart';
 import 'package:genesis_shell/main.dart';
+import 'package:genesis_shell/logic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'panel.dart';
 
-class _SettingsAppearanceDialog extends StatelessWidget {
-  const _SettingsAppearanceDialog({ super.key });
+class _SettingsAppearanceDialog extends StatefulWidget {
+  const _SettingsAppearanceDialog({
+    super.key,
+    required this.prefs,
+    required this.reload,
+  });
+
+  final SharedPreferences prefs;
+  final VoidCallback reload;
+
+  @override
+  State<_SettingsAppearanceDialog> createState() => _SettingsAppearanceDialogState();
+}
+
+class _SettingsAppearanceDialogState extends State<_SettingsAppearanceDialog> {
+  ColorScheme colorScheme = ColorScheme.night;
+  double? panelTransparency;
+  GenesisShellPanelStyle panelStyle = GenesisShellPanelStyle.pill;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadSettings();
+  }
+
+  void _loadSettings() {
+    colorScheme = ColorScheme.values.asNameMap()[widget.prefs.getString(GenesisShellSettings.colorScheme.name) ?? 'night']!;
+    panelTransparency = GenesisShellSettings.panelTransparency.valueFor(widget.prefs);
+    panelStyle = GenesisShellPanelStyle.values.asNameMap()[widget.prefs.getString(GenesisShellSettings.panelStyle.name) ?? 'pill']!;
+  }
 
   Widget build(BuildContext context) =>
     Dialog(
@@ -18,6 +50,107 @@ class _SettingsAppearanceDialog extends StatelessWidget {
           contentPadding: Theme.of(context).cardTheme.margin,
           child: ListView(
             children: [
+              ListTile(
+                title: const Text('Theme'),
+                onTap: () =>
+                  showDialog<ColorScheme>(
+                    context: context,
+                    builder: (context) =>
+                      Dialog(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView(
+                            children: [
+                              RadioListTile(
+                                title: const Text('Storm'), // TODO: i18n
+                                value: ColorScheme.storm,
+                                groupValue: colorScheme,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                              RadioListTile(
+                                title: const Text('Night'), // TODO: i18n
+                                value: ColorScheme.night,
+                                groupValue: colorScheme,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                              RadioListTile(
+                                title: const Text('Moon'), // TODO: i18n
+                                value: ColorScheme.moon,
+                                groupValue: colorScheme,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                              RadioListTile(
+                                title: const Text('Day'), // TODO: i18n
+                                value: ColorScheme.day,
+                                groupValue: colorScheme,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ).then((value) {
+                    if (value != null) {
+                      widget.prefs.setString(
+                        GenesisShellSettings.colorScheme.name,
+                        value.name
+                      );
+
+                      setState(() {
+                        colorScheme = value;
+                        widget.reload();
+                      });
+                    }
+                  }),
+              ),
+              ListTile(
+                title: const Text('Panel style'),
+                onTap: () =>
+                  showDialog<GenesisShellPanelStyle>(
+                    context: context,
+                    builder: (context) =>
+                      Dialog(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListView(
+                            children: [
+                              RadioListTile(
+                                title: const Text('Pill'), // TODO: i18n
+                                value: GenesisShellPanelStyle.pill,
+                                groupValue: panelStyle,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                              RadioListTile(
+                                title: const Text('Bubbles'), // TODO: i18n
+                                value: GenesisShellPanelStyle.bubbles,
+                                groupValue: panelStyle,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                              RadioListTile(
+                                title: const Text('Flat'), // TODO: i18n
+                                value: GenesisShellPanelStyle.flat,
+                                groupValue: panelStyle,
+                                onChanged: (value) => Navigator.pop(context, value),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ).then((value) {
+                    if (value != null) {
+                      widget.prefs.setString(
+                        GenesisShellSettings.panelStyle.name,
+                        value.name
+                      );
+
+                      setState(() {
+                        panelStyle = value;
+                        widget.reload();
+                      });
+                    }
+                  }),
+              ),
+
             ],
           ),
         ),
@@ -26,7 +159,12 @@ class _SettingsAppearanceDialog extends StatelessWidget {
 }
 
 class _SettingsPrivacyDialog extends StatelessWidget {
-  const _SettingsPrivacyDialog({ super.key });
+  const _SettingsPrivacyDialog({
+    super.key,
+    required this.prefs,
+  });
+
+  final SharedPreferences prefs;
 
   Widget build(BuildContext context) =>
     Dialog(
@@ -73,7 +211,14 @@ class _SettingsAboutDialog extends StatelessWidget {
 }
 
 class GenesisShellSettingsDialog extends StatelessWidget {
-  const GenesisShellSettingsDialog({ super.key });
+  const GenesisShellSettingsDialog({
+    super.key,
+    required this.prefs,
+    required this.reload,
+  });
+
+  final SharedPreferences prefs;
+  final VoidCallback reload;
 
   Widget build(BuildContext context) =>
     Dialog(
@@ -94,7 +239,10 @@ class GenesisShellSettingsDialog extends StatelessWidget {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => const _SettingsAppearanceDialog(),
+                    builder: (_) => _SettingsAppearanceDialog(
+                      prefs: prefs,
+                      reload: reload,
+                    ),
                   );
                 },
               ),
@@ -104,7 +252,7 @@ class GenesisShellSettingsDialog extends StatelessWidget {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => const _SettingsPrivacyDialog(),
+                    builder: (_) => _SettingsPrivacyDialog(prefs: prefs),
                   );
                 },
               ),

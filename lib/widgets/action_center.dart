@@ -8,6 +8,7 @@ import 'package:genesis_shell/logic.dart';
 import 'package:gokai/user/account.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'battery_indicator.dart';
 import 'clock.dart';
 import 'settings.dart';
@@ -15,10 +16,14 @@ import 'settings.dart';
 class ActionCenter extends StatelessWidget {
   const ActionCenter({
     super.key,
-    this.userAccount
+    this.userAccount,
+    this.prefs,
+    this.reload,
   });
 
   final GokaiUserAccount? userAccount;
+  final SharedPreferences? prefs;
+  final VoidCallback? reload;
 
   @override
   Widget build(BuildContext context) {
@@ -163,20 +168,27 @@ class ActionCenter extends StatelessWidget {
                             ),
                             onPressed: () {}
                           ),
-                          OutlinedButton(
-                            child: const Icon(Icons.gears, size: 24),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                              foregroundColor: coloredTextTheme.labelMedium!.color,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              showDialog(
-                                context: context,
-                                builder: (_) => const GenesisShellSettingsDialog(),
-                              );
-                            }
-                          ),
+                          ...(prefs != null && reload != null
+                            ? [
+                              OutlinedButton(
+                                child: const Icon(Icons.gears, size: 24),
+                                style: OutlinedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                                  foregroundColor: coloredTextTheme.labelMedium!.color,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => GenesisShellSettingsDialog(
+                                      prefs: prefs!,
+                                      reload: reload!,
+                                    ),
+                                  );
+                                }
+                              ),
+                            ] : [
+                          ]),
                         ]
                       : [])
                   ],

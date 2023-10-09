@@ -26,7 +26,10 @@ class GenesisShellDesktop extends StatefulWidget {
   const GenesisShellDesktop({super.key});
 
   @override
-  State<GenesisShellDesktop> createState() => _GenesisShellDesktopState();
+  State<GenesisShellDesktop> createState() => GenesisShellDesktopState();
+
+  static GenesisShellDesktopState? maybeOf(BuildContext context) => context.findAncestorStateOfType<GenesisShellDesktopState>();
+  static GenesisShellDesktopState of(BuildContext context) => maybeOf(context)!;
 }
 
 class _AppLauncherIntent extends Intent {
@@ -65,12 +68,19 @@ class _DesktopShortcutsManager extends ShortcutManager {
   }
 }
 
-class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
+class GenesisShellDesktopState extends State<GenesisShellDesktop> {
   final _scaffold = GlobalKey<material.ScaffoldState>();
   final _fs = const LocalFileSystem();
   final Map<String, Rect> _windowRects = {};
+  Key _key = UniqueKey();
   SharedPreferencesStorePlatform? _prevSharedPreferences;
   SharedPreferences? _prefs;
+  
+  void reload() {
+    setState(() {
+      _key = UniqueKey();
+    });
+  }
 
   Future<GokaiUserAccount> _getAccount(BuildContext context, { bool listen = true }) async {
     final route = ModalRoute.of(context);
@@ -151,6 +161,7 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
           ),
         },
         child: Focus(
+          key: _key,
           autofocus: true,
           child: Stack(
             children: [
@@ -173,7 +184,11 @@ class _GenesisShellDesktopState extends State<GenesisShellDesktop> {
                   future: _getAccount(context),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      return ActionCenter(userAccount: snapshot.data!);
+                      return ActionCenter(
+                        userAccount: snapshot.data!,
+                        prefs: _prefs,
+                        reload: () => reload(),
+                      );
                     }
 
                     if (snapshot.hasError) {
