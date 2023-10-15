@@ -14,6 +14,8 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  inputs.nixos-apple-silicon.url = github:tpwrules/nixos-apple-silicon;
+
   inputs.nixpkgs.url = github:ExpidusOS/nixpkgs;
 
   inputs.gokai = {
@@ -24,16 +26,21 @@
     };
   };
 
-  outputs = { self, expidus-sdk, nixpkgs, gokai }:
+  outputs = { self, expidus-sdk, nixos-apple-silicon, nixpkgs, gokai }:
     with expidus-sdk.lib;
     flake-utils.eachSystem flake-utils.allSystems (system:
       let
-        pkgs = expidus-sdk.legacyPackages.${system}.appendOverlays [
+        pkgs = expidus-sdk.legacyPackages.${system}.appendOverlays ([
           (_: _: {
             gokai = gokai.packages.${system}.sdk;
             gokai-debug = gokai.packages.${system}.sdk-debug;
           })
-        ];
+        ] ++ (optionals (system == "aarch64-linux") [
+          nixos-apple-silicon.overlays.default
+          (f: p: {
+            mesa = f.mesa-asahi-edge;
+          })
+        ]));
       in {
         packages.default = pkgs.flutter.buildFlutterApplication {
           pname = "genesis-shell";
@@ -78,6 +85,7 @@
           ];
 
           LIBGL_DRIVERS_PATH = "${pkgs.mesa.drivers}/lib/dri";
+          __EGL_VENDOR_LIBRARY_DIRS = "${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d";
           VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
           FLUTTER_ENGINE = pkgs.gokai.flutter-engine;
         };
