@@ -20,15 +20,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1727581022,
-        "narHash": "sha256-DThSOI7FjUu93WQRExWg7s8TZJeLME/xN1ToWpvXVgg=",
-        "owner": "NixOS",
+        "lastModified": 1728321831,
+        "narHash": "sha256-KBou/VacR3NgZ9tcsCyo3m1dqtwI7yJce4VBIHyH4k0=",
+        "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "7ec57ca0ec00766a18b26b0a49d637b721f76f45",
+        "rev": "4f1935aee0b587dbfffeb6c2cef28e02575720b4",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
+        "owner": "ExpidusOS",
+        "ref": "feat/flutter-3-26-pre",
         "repo": "nixpkgs",
         "type": "github"
       }

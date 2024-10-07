@@ -2,7 +2,7 @@
   description = "Next generation mobile/desktop shell";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:ExpidusOS/nixpkgs/feat/flutter-3-26-pre";
     systems.url = "github:nix-systems/default-linux";
     flake-utils.url = "github:numtide/flake-utils";
   };
@@ -22,7 +22,7 @@
         shortVersion = "1.0.0";
         version = "${shortVersion}+${buildCode}";
       in {
-        packages.default = pkgs.flutter.buildFlutterApplication {
+        packages.default = pkgs.flutter326.buildFlutterApplication {
           pname = "genesis-shell";
           version = "${shortVersion}+git-${shortRev}";
 
@@ -39,7 +39,7 @@
           pubspecLock = lib.importJSON ./pubspec.lock.json;
 
           gitHashes = {
-            expidus = "sha256-QgqfSm7o3HNSjrTLUdSzWJC5y1Bjko0Mpr7Ana8zOVY=";
+            expidus = "sha256-8SYiY9O0nivTOaYihOr3LcsGTnNRuvRRs9tjR3EPdCA=";
           };
 
           meta = {
@@ -55,7 +55,7 @@
           inherit (self.packages.${system}.default) pname version name;
 
           packages = with pkgs; [
-            flutter
+            flutter326
             pkg-config
             gtk3
             gtk-layer-shell

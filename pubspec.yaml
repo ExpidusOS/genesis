@@ -12,7 +12,7 @@ dependencies:
   expidus:
     git:
       url: https://github.com/ExpidusOS/libexpidus.git
-      ref: be4034548bcdf994f0afbd83cc244e519d9ece8d
+      ref: a58dfb61dc3dabb963194ad207358e470a610e48
 
 dev_dependencies:
   flutter_test:
