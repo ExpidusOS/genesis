@@ -39,7 +39,7 @@
           pubspecLock = lib.importJSON ./pubspec.lock.json;
 
           gitHashes = {
-            expidus = "sha256-8SYiY9O0nivTOaYihOr3LcsGTnNRuvRRs9tjR3EPdCA=";
+            expidus = "sha256-CFScuCIuRbZDEV6pPRJFbWbui1Lksvy7nYRYHMPDolQ=";
           };
 
           meta = {

@@ -1,28 +1,31 @@
-import 'package:expidus/expidus.dart';
-import 'views/panel.dart';
+import 'dart:io';
 
-void main() {
-  runApp(const ExpidusAppConfig(
-    const GenesisShell(),
+import 'package:expidus/expidus.dart';
+
+import 'views/action_dialog.dart';
+import 'views/backdrop.dart';
+import 'views/panel.dart';
+import 'views/user_drawer.dart';
+
+void main(List<String> args) {
+  final mode = args.length > 0 ? args[0] : 'panel';
+  final monitor = args.length > 1 ? args[1] : null;
+
+  runApp(ExpidusAppConfig(
+    ExpidusApp(
+      title: 'Genesis Shell',
+      home: switch (mode) {
+        'action-dialog' => ActionDialogView(monitor: monitor),
+        'backdrop' => BackdropView(monitor: monitor),
+        'panel' => PanelView(monitor: monitor),
+        'user-drawer' => UserDrawerView(monitor: monitor),
+        (_) => throw Exception('Invalid mode $mode'),
+      },
+    ),
     windowSize: const Size(0, 50),
-    windowLayer: const ExpidusWindowLayerConfig(
-      autoExclusiveZone: true,
+    windowLayer: ExpidusWindowLayerConfig(
       fixedSize: true,
-      top: ExpidusWindowLayerAnchor(toEdge: true, margin: 10),
-      left: ExpidusWindowLayerAnchor(toEdge: true, margin: 10),
-      right: ExpidusWindowLayerAnchor(toEdge: true, margin: 10),
+      monitor: monitor,
     ),
   ));
-}
-
-class GenesisShell extends StatelessWidget {
-  const GenesisShell({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpidusApp(
-      title: 'Genesis Shell',
-      home: const PanelView(),
-    );
-  }
 }

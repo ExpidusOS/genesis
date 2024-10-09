@@ -1,84 +1,72 @@
+import 'dart:io';
 import 'package:expidus/expidus.dart';
-
-const _kMarginSize = 5;
+import '../widgets/panel.dart';
 
 class PanelView extends StatefulWidget {
-  const PanelView({super.key});
+  const PanelView({
+    super.key,
+    this.monitor,
+  });
+
+  final String? monitor;
 
   @override
   State<PanelView> createState() => _PanelViewState();
 }
 
 class _PanelViewState extends State<PanelView> {
-  late FlapController _flapController;
+  Map<String, Process> _procMan = {};
 
-  void _updateState() {
-    ExpidusMethodChannel.instance
-        .setLayering(
-            ExpidusWindowLayerConfig(
-              layer: _flapController.isOpen
-                  ? ExpidusWindowLayer.overlay
-                  : ExpidusWindowLayer.top,
-              autoExclusiveZone: !_flapController.isOpen,
-              fixedSize: true,
-              keyboardMode: _flapController.isOpen
-                  ? ExpidusWindowLayerKeyboardMode.exclusive
-                  : ExpidusWindowLayerKeyboardMode.none,
-              top: ExpidusWindowLayerAnchor(
-                  toEdge: true,
-                  margin: _flapController.isOpen ? 0 : _kMarginSize),
-              left: ExpidusWindowLayerAnchor(
-                  toEdge: true,
-                  margin: _flapController.isOpen ? 0 : _kMarginSize),
-              right: ExpidusWindowLayerAnchor(
-                  toEdge: true,
-                  margin: _flapController.isOpen ? 0 : _kMarginSize),
-              bottom: ExpidusWindowLayerAnchor(
-                  toEdge: _flapController.isOpen,
-                  margin: _flapController.isOpen ? 0 : _kMarginSize),
-            ),
-            _flapController.isOpen ? const Size(0, 0) : const Size(0, 50))
-        .then((size) {
-      appWindow!.size = size;
-      setState(() {});
-    });
+  void _updateLayering() {
+    ExpidusMethodChannel.instance.setLayering(
+        ExpidusWindowLayerConfig(
+          layer: ExpidusWindowLayer.top,
+          exclusiveZone: 60,
+          fixedSize: true,
+          monitor: widget.monitor,
+          top: ExpidusWindowLayerAnchor(toEdge: true),
+          left: ExpidusWindowLayerAnchor(toEdge: true),
+          right: ExpidusWindowLayerAnchor(toEdge: true),
+        ),
+        const Size(0, 85.0));
+  }
+
+  Future<void> toggleMode(String mode) async {
+    if (!_procMan.containsKey(mode)) {
+      _procMan[mode] = await Process.start(Platform.resolvedExecutable,
+          [mode, if (widget.monitor != null) widget.monitor!]);
+      _updateLayering();
+      _procMan[mode]!.exitCode.then((_) {
+        _procMan.remove(mode);
+        _updateLayering();
+      });
+    } else {
+      _procMan[mode]!.kill();
+      _procMan!.remove(mode);
+      _updateLayering();
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _flapController = FlapController();
-
-    _flapController.addListener(() {
-      _updateState();
-    });
-
-    _updateState();
+    _updateLayering();
   }
 
   @override
-  Widget build(BuildContext context) => InputShapeCombineRegions(
-        child: ExpidusScaffold(
-          flapController: _flapController,
-          flapOptions: FlapOptions(listenResize: false, visible: false),
-          flap: (isDrawer) => Padding(
-            padding: const EdgeInsets.all(_kMarginSize * 1.0),
-            child: InputShapeRegion(
-              enable: _flapController.isOpen,
-              child: Sidebar(
-                currentIndex: 0,
-                isDrawer: isDrawer,
-                onSelected: (i) {},
-                children: [],
-              ),
-            ),
-          ),
-          headerBarPadding: EdgeInsets.all(
-              _flapController.isOpen ? _kMarginSize.toDouble() : 0.0),
-          wrapHeaderBar: (context, child) => InputShapeRegion(child: child),
-          showActions: false,
-          titleWidget: const SizedBox(),
-          transparentBody: true,
-        ),
+  void dispose() {
+    super.dispose();
+
+    _procMan.forEach((_, v) {
+      v.kill();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Panel(
+        padding: EdgeInsets.all(5),
+        hasDrawer: true,
+        onDrawerToggle: () => toggleMode('action-dialog'),
+        onEndDrawerToggle: () => toggleMode('user-drawer'),
       );
 }
