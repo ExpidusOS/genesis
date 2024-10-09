@@ -117,8 +117,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "613da9c3b1df4bec1a09f73ec49d590aa8862c8a"
-      resolved-ref: "613da9c3b1df4bec1a09f73ec49d590aa8862c8a"
+      ref: "97b8d7ec163011352b9210eb1d428e360cc3ff84"
+      resolved-ref: "97b8d7ec163011352b9210eb1d428e360cc3ff84"
       url: "https://github.com/ExpidusOS/libexpidus.git"
     source: git
     version: "0.0.1"
