@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:expidus/expidus.dart';
+
+import '../widgets/action_dialog.dart';
 import '../widgets/panel.dart';
 import '../widgets/user_drawer.dart';
 
@@ -19,6 +21,7 @@ class _DesktopViewState extends State<DesktopView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   GlobalKey<InputShapeCombineRegionsState> _inputShapeRegionsKey = GlobalKey();
 
+  bool? _isDialogOpen;
   late FlapController _flapController;
 
   void _updateLayering() {
@@ -27,9 +30,11 @@ class _DesktopViewState extends State<DesktopView> {
           layer: ExpidusWindowLayer.top,
           exclusiveZone: 60,
           fixedSize: true,
-          keyboardMode: (_scaffoldKey.currentState?.isEndDrawerOpen ?? false) ?
-            ExpidusWindowLayerKeyboardMode.demand
-          : ExpidusWindowLayerKeyboardMode.none,
+          keyboardMode: (_isDialogOpen ??
+                  _scaffoldKey.currentState?.isEndDrawerOpen ??
+                  false)
+              ? ExpidusWindowLayerKeyboardMode.demand
+              : ExpidusWindowLayerKeyboardMode.none,
           monitor: widget.monitor,
           top: ExpidusWindowLayerAnchor(toEdge: true),
           left: ExpidusWindowLayerAnchor(toEdge: true),
@@ -47,39 +52,57 @@ class _DesktopViewState extends State<DesktopView> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-    InputShapeCombineRegions(
-      key: _inputShapeRegionsKey,
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.transparent,
-        onEndDrawerChanged: (_) {
-          _updateLayering();
-          setState(() {
-            _inputShapeRegionsKey.currentState!.updateRegions();
-          });
-        },
-        endDrawer: Padding(
-          padding: const EdgeInsets.only(top: 55, right: 5, bottom: 5),
-          child: InputShapeRegion(
-            child: const UserDrawer(),
-          ),
-        ),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60),
-          child: InputShapeRegion(
-            child: Panel(
-              padding: EdgeInsets.all(5),
-              hasDrawer: true,
-              onDrawerToggle: () {},
-              onEndDrawerToggle: () => _scaffoldKey.currentState!.isEndDrawerOpen ? _scaffoldKey.currentState!.closeEndDrawer() :  _scaffoldKey.currentState!.openEndDrawer(),
+  Widget build(BuildContext context) => InputShapeCombineRegions(
+        key: _inputShapeRegionsKey,
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          onEndDrawerChanged: (_) {
+            _updateLayering();
+            setState(() {
+              _inputShapeRegionsKey.currentState!.updateRegions();
+            });
+          },
+          endDrawer: Padding(
+            padding: const EdgeInsets.only(top: 55, right: 5, bottom: 5),
+            child: InputShapeRegion(
+              child: const UserDrawer(),
             ),
           ),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: InputShapeRegion(
+              child: Panel(
+                padding: EdgeInsets.all(5),
+                hasDrawer: true,
+                onDrawerToggle: () {
+                  setState(() {
+                    _isDialogOpen = true;
+
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ActionDialog(),
+                    ).whenComplete(() {
+                      setState(() {
+                        _isDialogOpen = null;
+                      });
+                    });
+                  });
+                },
+                onEndDrawerToggle: () =>
+                    _scaffoldKey.currentState!.isEndDrawerOpen
+                        ? _scaffoldKey.currentState!.closeEndDrawer()
+                        : _scaffoldKey.currentState!.openEndDrawer(),
+              ),
+            ),
+          ),
+          extendBody: true,
+          body: InputShapeRegion(
+            enable: _isDialogOpen ??
+                _scaffoldKey.currentState?.isEndDrawerOpen ??
+                false,
+            child: const SizedBox.expand(),
+          ),
         ),
-        body: InputShapeRegion(
-          enable: _scaffoldKey.currentState?.isEndDrawerOpen ?? false,
-          child: const SizedBox.expand(),
-        ),
-      ),
-    );
+      );
 }
