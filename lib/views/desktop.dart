@@ -21,18 +21,23 @@ class _DesktopViewState extends State<DesktopView> {
   late FlapController _flapController;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: Colors.transparent,
-        endDrawer: Padding(
-          padding: const EdgeInsets.only(top: 55, right: 5, bottom: 5),
-          child: InputShapeRegion(
-            child: const UserDrawer(),
+  Widget build(BuildContext context) => Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/wallpaper/desktop/default.jpg'),
+            fit: BoxFit.fill,
           ),
         ),
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60),
-          child: Panel(
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: Colors.transparent,
+          endDrawer: Padding(
+            padding: const EdgeInsets.only(top: 55, right: 5, bottom: 5),
+            child: const UserDrawer(),
+          ),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: Panel(
               padding: EdgeInsets.all(5),
               hasDrawer: true,
               onDrawerToggle: () {
@@ -53,9 +58,10 @@ class _DesktopViewState extends State<DesktopView> {
                   _scaffoldKey.currentState!.isEndDrawerOpen
                       ? _scaffoldKey.currentState!.closeEndDrawer()
                       : _scaffoldKey.currentState!.openEndDrawer(),
+            ),
           ),
+          extendBody: true,
+          body: const SizedBox.expand(),
         ),
-        extendBody: true,
-        body: const SizedBox.expand(),
       );
 }
