@@ -144,8 +144,8 @@
       "dependency": "direct main",
       "description": {
         "path": ".",
-        "ref": "6c0f634413a6289a8edaf4eb37ca4cc318eaa633",
-        "resolved-ref": "6c0f634413a6289a8edaf4eb37ca4cc318eaa633",
+        "ref": "df9b48ac5e9168f148ed1cfe2e4df0d3bd0664f1",
+        "resolved-ref": "df9b48ac5e9168f148ed1cfe2e4df0d3bd0664f1",
         "url": "https://github.com/ExpidusOS/libexpidus.git"
       },
       "source": "git",
@@ -359,6 +359,17 @@
       "source": "hosted",
       "version": "1.15.0"
     },
+    "miso": {
+      "dependency": "direct main",
+      "description": {
+        "path": ".",
+        "ref": "ddd36cb57c62ded47335a1a52d96547c543dda64",
+        "resolved-ref": "ddd36cb57c62ded47335a1a52d96547c543dda64",
+        "url": "https://github.com/ExpidusOS/miso.git"
+      },
+      "source": "git",
+      "version": "0.0.1"
+    },
     "package_info_plus": {
       "dependency": "transitive",
       "description": {
@@ -519,11 +530,11 @@
       "dependency": "transitive",
       "description": {
         "name": "stack_trace",
-        "sha256": "73713990125a6d93122541237550ee3352a2d84baad52d375a4cad2eb9b7ce0b",
+        "sha256": "9f47fd3630d76be3ab26f0ee06d213679aa425996925ff3feffdec504931c377",
         "url": "https://pub.dev"
       },
       "source": "hosted",
-      "version": "1.11.1"
+      "version": "1.12.0"
     },
     "stream_channel": {
       "dependency": "transitive",
@@ -699,11 +710,11 @@
       "dependency": "transitive",
       "description": {
         "name": "vm_service",
-        "sha256": "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d",
+        "sha256": "f6be3ed8bd01289b34d679c2b62226f63c0e69f9fd2e50a6b3c1c729a961041b",
         "url": "https://pub.dev"
       },
       "source": "hosted",
-      "version": "14.2.5"
+      "version": "14.3.0"
     },
     "web": {
       "dependency": "transitive",
@@ -747,7 +758,7 @@
     }
   },
   "sdks": {
-    "dart": ">=3.5.1 <4.0.0",
+    "dart": ">=3.5.4 <4.0.0",
     "flutter": ">=3.26.0-0.1.pre"
   }
 }

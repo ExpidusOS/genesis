@@ -1,15 +1,30 @@
 {
   "nodes": {
+    "flake-compat": {
+      "locked": {
+        "lastModified": 1688025799,
+        "narHash": "sha256-ktpB4dRtnksm9F5WawoIkEneh1nrEvuxb5lJFt1iOyw=",
+        "owner": "nix-community",
+        "repo": "flake-compat",
+        "rev": "8bf105319d44f6b9f0d764efa4fdef9f1cc9ba1c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1726560853,
-        "narHash": "sha256-X6rJYSESBVr3hBoH0WbKE5KvhPU5bloyZ2L4K60/fPQ=",
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "c1dfcf08411b08f6b8615f7d8971a2bfa81d5e8a",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
         "type": "github"
       },
       "original": {
@@ -18,18 +33,41 @@
         "type": "github"
       }
     },
-    "nixpkgs": {
+    "nixos-apple-silicon": {
+      "inputs": {
+        "flake-compat": "flake-compat",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
       "locked": {
-        "lastModified": 1728324271,
-        "narHash": "sha256-jHyqTdZXFZuBlD2HkreZJXgBaXBtrLLvnhve8+bQOVA=",
-        "owner": "ExpidusOS",
-        "repo": "nixpkgs",
-        "rev": "9d5adb9e4586867342671b9baa296731cd75d874",
+        "lastModified": 1735172763,
+        "narHash": "sha256-a6n8RsiAolz6p24Fsr/gTndx9xr9USpKqKK6kzBeXQc=",
+        "owner": "tpwrules",
+        "repo": "nixos-apple-silicon",
+        "rev": "3daf0637409689d7a1304cedc50d20542bc47905",
         "type": "github"
       },
       "original": {
-        "owner": "ExpidusOS",
-        "ref": "feat/flutter-3-26-pre",
+        "owner": "tpwrules",
+        "ref": "release-2024-12-25",
+        "repo": "nixos-apple-silicon",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1735685556,
+        "narHash": "sha256-H/N85UY0AicQsLzdlxr+KUPMoABk4AZl71GtqpoHHyg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "69d73692cf69f45390b77c98982618b01ba94d1d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "release-24.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -37,8 +75,55 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "nixos-apple-silicon": "nixos-apple-silicon",
         "nixpkgs": "nixpkgs",
+        "shoyu": "shoyu",
         "systems": "systems_2"
+      }
+    },
+    "rust-overlay": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1686795910,
+        "narHash": "sha256-jDa40qRZ0GRQtP9EMZdf+uCbvzuLnJglTUI2JoHfWDc=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "5c2b97c0a9bc5217fc3dfb1555aae0fb756d99f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "shoyu": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixos-apple-silicon": [
+          "nixos-apple-silicon"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1735706752,
+        "narHash": "sha256-oTdi5le9L8detWbSpIysJrBOGe/n8pMtTIMYY6PabQc=",
+        "owner": "MidstallSoftware",
+        "repo": "shoyu",
+        "rev": "5b81e316cc5f5b557d8ef8c030272e4f581de409",
+        "type": "github"
+      },
+      "original": {
+        "owner": "MidstallSoftware",
+        "repo": "shoyu",
+        "type": "github"
       }
     },
     "systems": {

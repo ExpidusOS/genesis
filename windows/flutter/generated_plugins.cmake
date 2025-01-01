@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   expidus
+  miso
   url_launcher_windows
 )
 

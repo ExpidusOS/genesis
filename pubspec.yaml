@@ -12,7 +12,11 @@ dependencies:
   expidus:
     git:
       url: https://github.com/ExpidusOS/libexpidus.git
-      ref: 6c0f634413a6289a8edaf4eb37ca4cc318eaa633
+      ref: df9b48ac5e9168f148ed1cfe2e4df0d3bd0664f1
+  miso:
+    git:
+      url: https://github.com/ExpidusOS/miso.git
+      ref: ddd36cb57c62ded47335a1a52d96547c543dda64
 
 dev_dependencies:
   flutter_test:
@@ -21,3 +25,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/wallpaper/desktop/
+    - assets/wallpaper/mobile/
