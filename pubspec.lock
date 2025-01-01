@@ -117,8 +117,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "6c0f634413a6289a8edaf4eb37ca4cc318eaa633"
-      resolved-ref: "6c0f634413a6289a8edaf4eb37ca4cc318eaa633"
+      ref: df9b48ac5e9168f148ed1cfe2e4df0d3bd0664f1
+      resolved-ref: df9b48ac5e9168f148ed1cfe2e4df0d3bd0664f1
       url: "https://github.com/ExpidusOS/libexpidus.git"
     source: git
     version: "0.0.1"
@@ -293,8 +293,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: bd612536c8a53011a963391ade7f576139ed569b
-      resolved-ref: bd612536c8a53011a963391ade7f576139ed569b
+      ref: ddd36cb57c62ded47335a1a52d96547c543dda64
+      resolved-ref: ddd36cb57c62ded47335a1a52d96547c543dda64
       url: "https://github.com/ExpidusOS/miso.git"
     source: git
     version: "0.0.1"
