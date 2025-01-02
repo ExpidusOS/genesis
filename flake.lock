@@ -58,11 +58,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1735685556,
-        "narHash": "sha256-H/N85UY0AicQsLzdlxr+KUPMoABk4AZl71GtqpoHHyg=",
+        "lastModified": 1735830346,
+        "narHash": "sha256-aCP3ceCRu/vVFNFWztxWhIXpbF4kJrM1GIYBnGwK21U=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "69d73692cf69f45390b77c98982618b01ba94d1d",
+        "rev": "f6000b016f78babc218958f6b41be98460674a6c",
         "type": "github"
       },
       "original": {
@@ -113,15 +113,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1735706752,
-        "narHash": "sha256-oTdi5le9L8detWbSpIysJrBOGe/n8pMtTIMYY6PabQc=",
+        "lastModified": 1735838577,
+        "narHash": "sha256-0QfOYoFt06U2j44zkzjUsYKTdoxjWizXWHvkq8zmDUU=",
         "owner": "MidstallSoftware",
         "repo": "shoyu",
-        "rev": "5b81e316cc5f5b557d8ef8c030272e4f581de409",
+        "rev": "36efbec64ae89e014977abfad32f5f494a167357",
         "type": "github"
       },
       "original": {
         "owner": "MidstallSoftware",
+        "ref": "pull/5/head",
         "repo": "shoyu",
         "type": "github"
       }

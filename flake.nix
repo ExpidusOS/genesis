@@ -10,7 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     shoyu = {
-      url = "github:MidstallSoftware/shoyu";
+      url = "github:MidstallSoftware/shoyu?ref=pull/5/head";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
