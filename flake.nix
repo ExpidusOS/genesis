@@ -72,7 +72,7 @@
                 pubspecLock = lib.importJSON ./pubspec.lock.json;
 
                 gitHashes = {
-                  expidus = "sha256-EaOzIJvuZ5Bs75zslMCTb9ChkOX7lNUEUvsbDItyqG0=";
+                  expidus = "sha256-ptTj+si4jUr9Eg5x6Rd2iUtACAVEpWG4p/1FqZnFSvM=";
                   miso = "sha256-EznEUokD0nSON/4XRHe/HT+ybPAdNtoUwXCPEla6i1Y=";
                 };
 
@@ -112,24 +112,76 @@
             ];
           };
       in
-      {
-        packages =
-          {
-            default = pkgs.genesis-shell;
-          }
-          // lib.optionalAttrs (pkgs.pkgsAsahi != null) {
-            asahi = pkgs.pkgsAsahi.genesis-shell;
-          };
+      (
+        {
+          packages =
+            {
+              default = pkgs.genesis-shell;
+            }
+            // lib.optionalAttrs (pkgs.pkgsAsahi != null) {
+              asahi = pkgs.pkgsAsahi.genesis-shell;
+            };
 
-        devShells =
-          {
-            default = mkDevShell pkgs;
-          }
-          // lib.optionalAttrs (pkgs.pkgsAsahi != null) {
-            asahi = mkDevShell pkgs.pkgsAsahi;
-          };
+          devShells =
+            {
+              default = mkDevShell pkgs;
+            }
+            // lib.optionalAttrs (pkgs.pkgsAsahi != null) {
+              asahi = mkDevShell pkgs.pkgsAsahi;
+            };
 
-        legacyPackages = pkgs;
-      }
+          legacyPackages = pkgs;
+        }
+        // lib.optionalAttrs pkgs.hostPlatform.isLinux {
+          nixosConfigurations = lib.nixosSystem {
+            inherit system pkgs;
+            modules = [
+              "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
+              (
+                { config, lib, pkgs, ... }:
+                {
+                  config = lib.mkMerge [
+                    (import "${nixpkgs}/nixos/modules/programs/wayland/wayland-session.nix" {
+                      inherit lib pkgs;
+                    })
+                    {
+                      hardware.graphics.enable = true;
+
+                      services.greetd = {
+                        enable = true;
+                        settings.default_session = {
+                          command = "${pkgs.greetd.greetd}/bin/agreety --cmd \"${pkgs.shoyu}/bin/shoyu-compositor-runner ${pkgs.genesis-shell}/bin/genesis_shell\"";
+                        };
+                      };
+
+                      security.sudo = {
+                        enable = true;
+                        wheelNeedsPassword = false;
+                      };
+
+                      virtualisation.qemu.options = [
+                        "-vga none"
+                        "-device virtio-gpu-gl-pci"
+                        "-display default,gl=on"
+                      ];
+
+                      users.users.demo = {
+                        isNormalUser = true;
+                        password = "demo";
+                        createHome = true;
+                        group = "wheel";
+                        extraGroups = [
+                          "users"
+                          "video"
+                        ];
+                      };
+                    }
+                  ];
+                }
+              )
+            ];
+          };
+        }
+      )
     );
 }
