@@ -20,6 +20,11 @@
     };
   };
 
+  nixConfig = {
+    substituters = ["https://cache.garnix.io"];
+    trusted-public-keys = ["cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="];
+  };
+
   outputs =
     {
       self,
@@ -158,6 +163,8 @@
                         enable = true;
                         wheelNeedsPassword = false;
                       };
+
+                      boot.initrd.kernelModules = [ "virtio_gpu" "virtio_pci" ];
 
                       virtualisation.qemu.options = [
                         "-vga none"
