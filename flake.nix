@@ -155,7 +155,7 @@
                       services.greetd = {
                         enable = true;
                         settings.default_session = {
-                          command = "${pkgs.greetd.greetd}/bin/agreety --cmd \"${pkgs.shoyu}/bin/shoyu-compositor-runner ${pkgs.genesis-shell}/bin/genesis_shell\"";
+                          command = "${pkgs.shoyu}/bin/shoyu-compositor-runner ${pkgs.genesis-shell}/bin/genesis_shell";
                         };
                       };
 
@@ -168,7 +168,6 @@
 
                       virtualisation.qemu.options = [
                         "-vga none"
-                        "-device virtio-gpu-gl-pci"
                         "-display default,gl=on"
                       ];
 
@@ -180,6 +179,7 @@
                         extraGroups = [
                           "users"
                           "video"
+                          "input"
                         ];
                       };
                     }
