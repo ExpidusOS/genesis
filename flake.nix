@@ -155,33 +155,52 @@
                       services.greetd = {
                         enable = true;
                         settings.default_session = {
-                          command = "${pkgs.shoyu}/bin/shoyu-compositor-runner ${pkgs.genesis-shell}/bin/genesis_shell";
+                          command = "${pkgs.coreutils}/bin/env${lib.optionalString (pkgs.hostPlatform.isAarch64) " WLR_DRM_DEVICES=/dev/dri/card0"} ${pkgs.shoyu}/bin/shoyu-compositor-runner ${pkgs.genesis-shell}/bin/genesis_shell";
+                          user = "genesis-shell";
                         };
                       };
 
-                      security.sudo = {
-                        enable = true;
-                        wheelNeedsPassword = false;
+                      security = {
+                        sudo = {
+                          enable = true;
+                          wheelNeedsPassword = false;
+                        };
+                        pam.services.genesis-shell = {};
                       };
 
                       boot.initrd.kernelModules = [ "virtio_gpu" "virtio_pci" ];
 
-                      virtualisation.qemu.options = [
-                        "-vga none"
-                        "-device virtio-gpu-gl-pci"
-                        "-display default,gl=on"
-                      ];
-
-                      users.users.demo = {
-                        isNormalUser = true;
-                        password = "demo";
-                        createHome = true;
-                        group = "wheel";
-                        extraGroups = [
-                          "users"
-                          "video"
-                          "input"
+                      virtualisation = {
+                        memorySize = 4096;
+                        qemu.options = [
+                          "-vga none"
+                          "-device virtio-gpu-gl-pci"
+                          "-display default,gl=on"
                         ];
+                      };
+
+                      users = {
+                        groups.genesis-shell = {};
+                        users = {
+                          demo = {
+                            isNormalUser = true;
+                            password = "demo";
+                            createHome = true;
+                            group = "wheel";
+                            extraGroups = [
+                              "users"
+                              "video"
+                              "input"
+                            ];
+                          };
+                          genesis-shell = {
+                            description = "Genesis Shell login greeter user";
+                            isSystemUser = true;
+                            home = "/var/lib/genesis-shell";
+                            createHome = true;
+                            group = "genesis-shell";
+                          };
+                        };
                       };
                     }
                   ];
