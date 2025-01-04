@@ -168,6 +168,7 @@
 
                       virtualisation.qemu.options = [
                         "-vga none"
+                        "-device virtio-gpu-gl-pci"
                         "-display default,gl=on"
                       ];
 
