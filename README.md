@@ -1,11 +1,16 @@
-# Genesis Shell
+# genesis
 
-Next generation desktop &amp; mobile shell
+A new Flutter project.
 
-## Why Flutter?
+## Getting Started
 
-Flutter supports mobile and desktop devices. Since the goal is to provide
-a convergence experience, it would make sense to use a framework designed
-for both mobile and desktop devices. The adaptive and responsive nature
-of Flutter along side with it's easy to use developer tools makes it
-a great contender.
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

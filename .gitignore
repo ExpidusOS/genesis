@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/release
 
 result
+result-*
+
+devtools_options.yaml

@@ -1,11 +1,11 @@
 {
-    "name": "genesis_shell",
-    "short_name": "genesis_shell",
+    "name": "genesis",
+    "short_name": "genesis",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Next generation mobile/desktop shell",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
