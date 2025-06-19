@@ -27,7 +27,7 @@ class GenesisShellPanelView extends StatefulWidget {
 class _GenesisShellPanelViewState extends State<GenesisShellPanelView> {
   Process? subComponent;
 
-  Future<Process?> run(String? initialRoute) async {
+  Future<Process?> run(String component, String? initialRoute) async {
     if (subComponent != null) {
       subComponent!.kill();
       subComponent = null;
@@ -35,7 +35,7 @@ class _GenesisShellPanelViewState extends State<GenesisShellPanelView> {
     }
 
     subComponent = await runComponent(
-      component: 'action-center',
+      component: component,
       monitor: widget.monitor,
       initialRoute: initialRoute,
     );
@@ -48,14 +48,17 @@ class _GenesisShellPanelViewState extends State<GenesisShellPanelView> {
   }
 
   Widget build(BuildContext context) => Panel(
+    onAppsPressed: () {
+      run('launcher', '/');
+    },
     onNetworkingPressed: () {
-      run('/networking');
+      run('action-center', '/networking');
     },
     onClockPressed: () {
-      run('/clock');
+      run('action-center', '/clock');
     },
     onPowerPressed: () {
-      run('/power');
+      run('action-center', '/power');
     },
   );
 }

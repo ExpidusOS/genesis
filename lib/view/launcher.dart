@@ -1,9 +1,9 @@
 import 'package:expidus/expidus.dart';
 import 'package:flutter/services.dart';
-import '../widgets/action_center.dart';
+import '../widgets/launcher.dart';
 
-class GenesisShellActionCenterView extends StatelessWidget {
-  const GenesisShellActionCenterView({super.key});
+class GenesisShellLauncherView extends StatelessWidget {
+  const GenesisShellLauncherView({super.key});
 
   Widget build(BuildContext context) => Overlay(
     initialEntries: [
@@ -15,10 +15,10 @@ class GenesisShellActionCenterView extends StatelessWidget {
       ),
       OverlayEntry(
         builder: (context) => Align(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 360),
-            child: ActionCenter(onClosePressed: () => SystemNavigator.pop()),
+            child: Launcher(onClosePressed: () => SystemNavigator.pop()),
           ),
         ),
       ),

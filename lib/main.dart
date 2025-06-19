@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'services.dart';
 import 'view/action_center.dart';
 import 'view/desktop.dart';
+import 'view/launcher.dart';
 import 'view/panel.dart';
 import 'view/shell.dart';
 
 Size? _getWindowSize({required String component}) => switch (component) {
   'panel' => GenesisShellPanelView.getWindowSize(),
   'action-center' => GenesisShellActionCenterView.getWindowSize(),
+  'launcher' => GenesisShellLauncherView.getWindowSize(),
   _ => null,
 };
 
@@ -22,6 +24,7 @@ ExpidusWindowLayerConfig? _getLayerConfig({
   'action-center' => GenesisShellActionCenterView.getLayerConfig(
     monitor: monitor,
   ),
+  'launcher' => GenesisShellLauncherView.getLayerConfig(monitor: monitor),
   _ => null,
 };
 
@@ -29,7 +32,7 @@ void main(List<String> args) {
   final parser = ArgParser()
     ..addOption(
       'component',
-      allowed: ['shell', 'panel', 'desktop', 'action-center'],
+      allowed: ['shell', 'panel', 'desktop', 'action-center', 'launcher'],
       defaultsTo: 'shell',
     )
     ..addOption('monitor')
@@ -70,6 +73,7 @@ class GenesisShellApp extends StatelessWidget {
     'panel' => {'/': (context) => GenesisShellPanelView(monitor: monitor)},
     'desktop' => {'/': (context) => const GenesisShellDesktopView()},
     'action-center' => {'/': (context) => const GenesisShellActionCenterView()},
+    'launcher' => {'/': (context) => const GenesisShellLauncherView()},
     _ => {},
   };
 

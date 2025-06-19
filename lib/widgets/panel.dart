@@ -9,12 +9,14 @@ class Panel extends StatelessWidget {
   const Panel({
     super.key,
     this.clockFormat,
+    this.onAppsPressed,
     this.onNetworkingPressed,
     this.onClockPressed,
     this.onPowerPressed,
   });
 
   final DateFormat? clockFormat;
+  final VoidCallback? onAppsPressed;
   final VoidCallback? onNetworkingPressed;
   final VoidCallback? onClockPressed;
   final VoidCallback? onPowerPressed;
@@ -36,7 +38,7 @@ class Panel extends StatelessWidget {
     child: child,
   );
 
-  Widget _buildOptionlButton(Widget child, VoidCallback? onPressed) =>
+  Widget _buildOptionalButton(Widget child, VoidCallback? onPressed) =>
       onPressed != null ? _buildButton(child, onPressed!) : child;
 
   Widget build(BuildContext context) => Padding(
@@ -45,7 +47,11 @@ class Panel extends StatelessWidget {
         : EdgeInsets.all(8),
     child: HeaderBar(
       showActions: false,
-      title: '',
+      titleWidget: const SizedBox(),
+      start: [
+        if (onAppsPressed != null)
+          _buildButton(Icon(Icons.apps), onAppsPressed!),
+      ],
       end: [
         FutureProvider(
           initialData: null,
@@ -57,7 +63,7 @@ class Panel extends StatelessWidget {
             if (net != null) {
               return ListenableBuilder(
                 listenable: net,
-                builder: (context, _) => _buildOptionlButton(
+                builder: (context, _) => _buildOptionalButton(
                   Row(
                     children: net.devices
                         .where((dev) => dev.showInPanel)
@@ -76,7 +82,7 @@ class Panel extends StatelessWidget {
             return const CircularProgressIndicator();
           },
         ),
-        _buildOptionlButton(
+        _buildOptionalButton(
           DigitalClock.periodic(format: clockFormat),
           onClockPressed,
         ),
