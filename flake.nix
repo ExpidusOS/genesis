@@ -42,9 +42,21 @@
           "--dart-define=COMMIT_HASH=${shortRev}"
         ];
 
+        nativeBuildInputs = with pkgs; [
+          accountsservice
+        ];
+
         buildInputs = with pkgs; [
           gtk-layer-shell
         ];
+
+        preBuild = ''
+          find .dart_tool
+          patchShebangs scripts/gen-dbus.sh
+          while IFS= read -r line; do
+            packageRunCustom dbus dart_dbus bin $line
+          done <<< $(DRY_RUN=1 ./scripts/gen-dbus.sh)
+        '';
 
         pubspecLock = lib.importJSON ./pubspec.lock.json;
 
@@ -70,6 +82,7 @@
 
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
+          accountsservice
           flutter
           pkg-config
           gtk3

@@ -46,3 +46,6 @@ result
 result-*
 
 devtools_options.yaml
+
+lib/dbus/remote-objects
+lib/dbus/objects
