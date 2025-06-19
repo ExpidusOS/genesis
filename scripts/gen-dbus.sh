@@ -15,7 +15,8 @@ srcdir=$(dirname $(dirname $0))
 interfaces=()
 
 remoteInterfaces=(
-  org.freedesktop.Accounts.xml
+  org.freedesktop.Accounts
+  org.freedesktop.Accounts.User
 )
 
 sources=(
@@ -23,11 +24,11 @@ sources=(
 )
 
 function collectPaths {
-  for iface in $1; do
+  for iface in $@; do
     hasIface=0
     for src in ${sources[@]}; do
-      if [ -e "${src}/${iface}" ]; then
-        echo "${src}/${iface}"
+      if [ -e "${src}/${iface}.xml" ]; then
+        echo "${src}/${iface}.xml"
         hasIface=1
         break
       fi
