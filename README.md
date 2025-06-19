@@ -1,16 +1,21 @@
-# genesis
+# Genesis Shell
 
-A new Flutter project.
+Next generation desktop &amp; mobile shell
 
-## Getting Started
+## Why Flutter?
 
-This project is a starting point for a Flutter application.
+Flutter supports mobile and desktop devices. Since the goal is to provide
+a convergence experience, it would make sense to use a framework designed
+for both mobile and desktop devices. The adaptive and responsive nature
+of Flutter along side with it's easy to use developer tools makes it
+a great contender.
 
-A few resources to get you started if this is your first Flutter project:
+## Building
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Linux
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+$ flutter pub get
+$ ./scripts/gen-dbus.sh
+$ flutter build linux
+```
